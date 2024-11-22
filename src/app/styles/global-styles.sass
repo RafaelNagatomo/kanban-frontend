@@ -1,0 +1,35 @@
+@use './variables' as *
+@use 'sass:color'
+
+body
+  background-color: $bg-primary
+  font-family: $font-family-sans-serif
+  color: $text-color
+
+.btn-primary
+  background-color: $primary
+  color: $white
+  border: none
+  border-radius: 8px
+  padding: 8px 16px
+  cursor: pointer
+
+  &:hover
+    background-color: color.adjust($primary, $lightness: 15%)
+
+  &:active
+        background-color: color.adjust($primary, $lightness: 5%)
+
+.btn-cancel
+  background-color: $red
+  color: $white
+  border: none
+  border-radius: 8px
+  padding: 8px 16px
+  cursor: pointer
+
+  &:hover
+    background-color: color.adjust($red, $lightness: 15%)
+
+  &:active
+        background-color: color.adjust($red, $lightness: 5%)

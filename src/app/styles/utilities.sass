@@ -1,0 +1,25 @@
+@use 'variables' as *
+
+@each $name, $value in $grays
+  .color-#{$name}
+    color: #{$value}
+
+  .bg-#{$name}
+    background-color: #{$value}
+
+
+
+@each $name, $value in $colors
+  .color-#{$name}
+    color: #{$value}
+
+  .bg-#{$name}
+    background-color: #{$value}
+
+
+
+@each $name, $value in $font-sizes
+  .font-size-#{$name}
+    font-size: #{$value}
+
+
