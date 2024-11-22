@@ -1,0 +1,28 @@
+@use '../../../styles/_variables.scss' as *
+@use 'sass:color'
+
+.header-container
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 10px 20px
+  background-color: $gray-300
+  border-bottom: 1px solid color.adjust($bg-primary, $lightness: 10%)
+
+  .header-menu
+    list-style: none
+    display: flex
+    margin: 0
+    padding: 0
+
+    .menu-item
+      padding: 10px 15px
+      font-weight: bold
+      font-size: $h5-font-size
+      border-radius: 5px
+      transition: background-color 0.3s ease
+
+  .header-actions
+    display: flex
+    align-items: center
+    gap: 10px
