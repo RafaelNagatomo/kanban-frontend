@@ -1,11 +1,13 @@
-<h1 class="title">SEUS PROJETOS</h1>
-<div class="container">
-  @for(board of this.boards; track board.id){
-    <app-board-card
-      [title]="board.name"
-      [description]="'This is a description.'"
-      [footer]="true"
-      [footerContent]="'Criado em: ' + (board.createdAt | date:'dd/MM/yyyy')"
-    ></app-board-card>
-  }
-</div>
+<main>
+  <h1 class="title">MEUS PROJETOS</h1>
+  <div class="container">
+    @for(board of this.boards; track board.id){
+      <app-board-card
+        [title]="board.name"
+        [description]="'This is a description.'"
+        [footer]="true"
+        [footerContent]="'Criado em: ' + (board.createdAt | date:'dd/MM/yyyy')"
+      ></app-board-card>
+    }
+  </div>
+</main>
