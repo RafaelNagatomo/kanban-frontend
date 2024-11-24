@@ -3,6 +3,7 @@ export const GET_ALL_BOARDS = `
     getAllBoards {
       id
       name
+      description
       createdAt
       createdBy
       updatedAt
