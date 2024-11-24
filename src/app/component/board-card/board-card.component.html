@@ -2,7 +2,9 @@
   <h3 class="card-title">{{ title }}</h3>
   <p class="card-body">{{ description }}</p>
   @if(footer){
-    <p class="card-footer"></p>
-    <p class="footer-content">{{ footerContent }}</p>
+    <div class="card-footer"></div>
+    @for(content of footerContent; track footerContent){
+      <p class="footer-content">{{ content }}</p>
+    }
   }
 </div>

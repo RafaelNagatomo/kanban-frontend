@@ -4,9 +4,12 @@
     @for(board of this.boards; track board.id){
       <app-board-card
         [title]="board.name"
-        [description]="'This is a description.'"
+        [description]="board.description"
         [footer]="true"
-        [footerContent]="'Criado em: ' + (board.createdAt | date:'dd/MM/yyyy')"
+        [footerContent]="[
+          'Criado em: ' + (board.createdAt | date:'dd/MM/yyyy'),
+          'Última atualização: ' + (board.updatedAt | date:'dd/MM/yyyy')
+        ]"
       ></app-board-card>
     }
   </div>

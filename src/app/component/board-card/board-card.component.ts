@@ -10,5 +10,5 @@ export class BoardCardComponent {
   @Input() title?: string = ''
   @Input() description?: string = ''
   @Input() footer?: boolean = false
-  @Input() footerContent?: string = ''
+  @Input() footerContent?: string[] = []
 }
