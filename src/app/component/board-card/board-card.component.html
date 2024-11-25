@@ -1,12 +1,20 @@
 <div class="card">
   <div class="card-header">
     <h3 class="card-title">{{ name }}</h3>
-    <button
-      class="btn-secondary"
-      (click)="openAddEditBoardModal({ name, description })"
-      >
-      <span class="material-symbols-outlined">edit</span>
-    </button>
+    <div class="header-actions">
+      <button
+        class="btn-secondary"
+        (click)="openAddEditBoardModal({ name, description })"
+        >
+        <span class="material-symbols-outlined">edit</span>
+      </button>
+      <button
+        class="btn-cancel"
+        (click)="openDeleteBoardModal(boardData)"
+        >
+        <span class="material-symbols-outlined">delete</span>
+      </button>
+    </div>
   </div>
 
   <p class="card-body">{{ description }}</p>

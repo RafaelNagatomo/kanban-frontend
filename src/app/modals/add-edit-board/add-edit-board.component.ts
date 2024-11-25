@@ -31,7 +31,7 @@ export class AddEditBoardComponent {
   @Input() isEdit: boolean = false
   @Input() isOpen: boolean = false
   @Input() boardData: IBoard = {}
-  @Output() modalClosed = new EventEmitter()
+  @Output() emitModalClosed = new EventEmitter()
   @Output() upsertRenderBoard = new EventEmitter()
   boardForm!: FormGroup
   errorMessage: string = ''
@@ -60,7 +60,7 @@ export class AddEditBoardComponent {
 
   closeModal() {
     this.isOpen = false
-    this.modalClosed.emit()
+    this.emitModalClosed.emit()
   }
 
   onCreateForm() {

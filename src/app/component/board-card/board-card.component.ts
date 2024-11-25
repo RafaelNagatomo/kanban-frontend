@@ -12,10 +12,15 @@ export class BoardCardComponent {
   @Input() description?: string = ''
   @Input() footer?: boolean = false
   @Input() footerContent?: string[] = []
-  @Output() openModal = new EventEmitter<IBoard>();
+  @Output() emitOpenAddEditBoardModal = new EventEmitter<IBoard>();
+  @Output() emitOpenDeleteBoardModal = new EventEmitter<IBoard>();
   boardData: IBoard = {}
 
   openAddEditBoardModal(boardData: IBoard) {
-    this.openModal.emit(boardData);
+    this.emitOpenAddEditBoardModal.emit(boardData);
+  }
+
+  openDeleteBoardModal(boardData: IBoard) {
+    this.emitOpenDeleteBoardModal.emit(boardData)
   }
 }

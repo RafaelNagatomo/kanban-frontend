@@ -1,0 +1,25 @@
+<div class="backdrop">
+  <div class="modal" open>
+    <div>
+      <h4>{{ title }}</h4>
+    </div>
+    <div>
+      <p>{{ message }}</p>
+    </div>
+    <div class="modal-actions">
+      <button
+        type="button"
+        class="btn-cancel"
+        (click)="closeModal()"
+      >
+        Cancelar
+      </button>
+      <button
+        class="btn-primary"
+        (click)="confirmAction()"
+      >
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>

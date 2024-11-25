@@ -6,11 +6,18 @@ import { BoardCardComponent } from '../../component/board-card/board-card.compon
 import { CommonModule } from '@angular/common'
 import { AddEditBoardComponent } from '../../modals/add-edit-board/add-edit-board.component'
 import { BehaviorSubject } from 'rxjs'
+import { ConfirmModalComponent } from "../../modals/confirm-modal/confirm-modal.component";
+import { DELETE_BOARD_MUTATION } from '../../shared/commands/board.commands'
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [BoardCardComponent, CommonModule, AddEditBoardComponent],
+  imports: [
+    BoardCardComponent,
+    CommonModule,
+    AddEditBoardComponent,
+    ConfirmModalComponent
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.sass'
 })
@@ -19,9 +26,10 @@ export class HomeComponent {
   boards$ = this.boardsSubject.asObservable()
   
   @Output() boardData: IBoard = {}
-  isModalOpen: boolean = false
+  isAddEditBoardModalOpen: boolean = false
+  isDeleteBoardModalOpen: boolean = false
   isEditMode: boolean = false
-  newBoard: IBoard= {}
+  boardToDelete: IBoard = {}
 
   constructor(private graphqlService: GraphqlService) {}
 
@@ -37,13 +45,13 @@ export class HomeComponent {
   }
 
   openAddEditBoardModal(isEdit: boolean, board?: IBoard): void {
-    this.isModalOpen = true
+    this.isAddEditBoardModalOpen = true
     this.isEditMode = isEdit
     this.boardData = board ? { ...board } : {}
   }
 
-  onModalClosed(): void {
-    this.isModalOpen = false
+  onBoardModalClosed(): void {
+    this.isAddEditBoardModalOpen = false
   }
 
   upsertRenderBoard(data: IBoard): void {
@@ -58,5 +66,34 @@ export class HomeComponent {
     } else {
       this.boardsSubject.next([...currentBoards, data])
     }
+  }
+
+  openDeleteModal(board: IBoard): void {
+    this.boardToDelete = board
+    this.isDeleteBoardModalOpen = true
+  }
+
+  onDeleteBoardModalClosed(): void {
+    this.isDeleteBoardModalOpen = false
+  }
+
+  handleDeletionBoard(): void {
+    if (!this.boardToDelete) return
+
+    this.graphqlService.mutate(DELETE_BOARD_MUTATION, { id: this.boardToDelete.id }).subscribe({
+      next: (result) => {
+        if (result) {
+          const currentBoards = this.boardsSubject.value
+          const updatedBoards = currentBoards
+            .filter(
+              board => board.id !== this.boardToDelete.id
+            )
+          this.boardsSubject.next([...updatedBoards])
+        } else {
+          console.error('Falha ao deletar a coluna');
+        }
+      },
+    })
+    this.onDeleteBoardModalClosed()
   }
 }

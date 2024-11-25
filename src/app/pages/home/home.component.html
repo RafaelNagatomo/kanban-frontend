@@ -12,7 +12,8 @@
   <div class="container">
     @for(board of boards$ | async; track board.id){
       <app-board-card
-        (openModal)="openAddEditBoardModal(true, board)"
+        (emitOpenAddEditBoardModal)="openAddEditBoardModal(true, board)"
+        (emitOpenDeleteBoardModal)="openDeleteModal(board)"
         [name]="board.name"
         [description]="board.description"
         [footer]="true"
@@ -23,13 +24,24 @@
       ></app-board-card>
     }
   </div>
-  @if(isModalOpen){
+
+  @if(isAddEditBoardModalOpen){
     <add-edit-board
-      [isOpen]="isModalOpen"
+      [isOpen]="isAddEditBoardModalOpen"
       [isEdit]="isEditMode"
-      (modalClosed)="onModalClosed()"
+      (emitModalClosed)="onBoardModalClosed()"
       (upsertRenderBoard)="upsertRenderBoard($event)"
       [boardData]="this.boardData"
     ></add-edit-board>
+  }
+
+  @if(isDeleteBoardModalOpen){
+    <app-confirm-modal
+      [isOpen]="isDeleteBoardModalOpen"
+      [title]="'Deletar Projeto'"
+      [message]="'Tem certeza que deseja deletar este projeto? Esta ação é irreversível.'"
+      (emitConfirm)="handleDeletionBoard()"
+      (emitModalClosed)="onDeleteBoardModalClosed()"
+    ></app-confirm-modal>
   }
 </main>

@@ -21,3 +21,9 @@ export const UPDATE_BOARD_MUTATION = `
     }
   }
 `
+
+export const DELETE_BOARD_MUTATION = `
+  mutation DeleteBoard($id: Int!) {
+    deleteBoard(id: $id)
+  }
+`
