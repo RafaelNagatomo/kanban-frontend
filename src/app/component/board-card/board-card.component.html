@@ -1,6 +1,16 @@
 <div class="card">
-  <h3 class="card-title">{{ title }}</h3>
+  <div class="card-header">
+    <h3 class="card-title">{{ name }}</h3>
+    <button
+      class="btn-secondary"
+      (click)="openAddEditBoardModal({ name, description })"
+      >
+      <span class="material-symbols-outlined">edit</span>
+    </button>
+  </div>
+
   <p class="card-body">{{ description }}</p>
+
   @if(footer){
     <div class="card-footer"></div>
     @for(content of footerContent; track content){

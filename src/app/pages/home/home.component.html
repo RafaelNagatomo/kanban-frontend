@@ -12,7 +12,8 @@
   <div class="container">
     @for(board of boards$ | async; track board.id){
       <app-board-card
-        [title]="board.name"
+        (openModal)="openAddEditBoardModal(true, board)"
+        [name]="board.name"
         [description]="board.description"
         [footer]="true"
         [footerContent]="[
@@ -27,7 +28,8 @@
       [isOpen]="isModalOpen"
       [isEdit]="isEditMode"
       (modalClosed)="onModalClosed()"
-      (newBoardAdd)="newBoardAdd($event)"
+      (upsertRenderBoard)="upsertRenderBoard($event)"
+      [boardData]="this.boardData"
     ></add-edit-board>
   }
 </main>

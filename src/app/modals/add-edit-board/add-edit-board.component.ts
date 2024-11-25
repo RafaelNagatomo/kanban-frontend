@@ -3,10 +3,11 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output
+  Output,
+  SimpleChanges
 } from '@angular/core'
 import {
-  FormControl,
+  FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -14,7 +15,10 @@ import {
 } from '@angular/forms'
 import { GraphqlService } from '../../shared/graphql/graphql.service'
 import { IBoard } from '../../shared/interfaces/board.interface'
-import { CREATE_BOARD_MUTATION } from '../../shared/commands/board.commands'
+import {
+  CREATE_BOARD_MUTATION,
+  UPDATE_BOARD_MUTATION
+} from '../../shared/commands/board.commands'
 
 @Component({
   selector: 'add-edit-board',
@@ -26,18 +30,26 @@ import { CREATE_BOARD_MUTATION } from '../../shared/commands/board.commands'
 export class AddEditBoardComponent {
   @Input() isEdit: boolean = false
   @Input() isOpen: boolean = false
+  @Input() boardData: IBoard = {}
   @Output() modalClosed = new EventEmitter()
-  @Output() newBoardAdd = new EventEmitter()
+  @Output() upsertRenderBoard = new EventEmitter()
   boardForm!: FormGroup
   errorMessage: string = ''
 
-  constructor(private graphqlService: GraphqlService) {}
+  constructor(private graphqlService: GraphqlService, private fb: FormBuilder) {
+    this.boardForm = this.fb.group({
+      name: [''],
+      description: ['', Validators.required],
+    });
+  }
 
-  ngOnInit(): void {
-    this.boardForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      description: new FormControl('')
-    })
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['boardData'] && this.boardData) {
+      this.boardForm.patchValue({
+        name: this.isEdit ? this.boardData.name : '',
+        description: this.isEdit ? this.boardData.description : '',
+      });
+    }
   }
 
   get errors() {
@@ -51,27 +63,53 @@ export class AddEditBoardComponent {
     this.modalClosed.emit()
   }
 
-  submitForm() {
+  onCreateForm() {
     if (this.boardForm.invalid) return
 
     const { name, description } = this.boardForm.value
-    const newBoard: IBoard = {
+    const data: IBoard = {
       name: name,
       description: description,
       userId: 3,
       createdBy: 3
     }
-    this.graphqlService.mutate(CREATE_BOARD_MUTATION, { data: newBoard }).subscribe({
+    this.graphqlService.mutate(CREATE_BOARD_MUTATION, { data: data }).subscribe({
       next: (result) => {
         if(result) {
           this.closeModal()
-          this.newBoardAdd.emit(newBoard)
+          this.upsertRenderBoard.emit(data)
         } else {
           console.error('Falha ao criar projeto')
         }
       },
       error: (error) => {
         console.error('Não foi possível concluir o registro:', error)
+        this.errorMessage = String(error)
+      },
+    })
+  }
+
+  onUpdateForm() {
+    if (this.boardForm.invalid) return
+
+    const { name, description } = this.boardForm.value
+    const data: IBoard = {
+      id: this.boardData.id,
+      name: name,
+      description: description,
+      updatedBy: 3
+    }
+    this.graphqlService.mutate(UPDATE_BOARD_MUTATION, { id: data.id, data: data }).subscribe({
+      next: (result) => {
+        if(result) {
+          this.closeModal()
+          this.upsertRenderBoard.emit(data)
+        } else {
+          console.error('Falha ao atualizar projeto')
+        }
+      },
+      error: (error) => {
+        console.error('Não foi possível concluir a operação:', error)
         this.errorMessage = String(error)
       },
     })

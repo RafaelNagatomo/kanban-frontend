@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { IBoard } from '../../shared/interfaces/board.interface'
 
 @Component({
   selector: 'app-board-card',
@@ -7,8 +8,14 @@ import { Component, Input } from '@angular/core'
   styleUrl: './board-card.component.sass'
 })
 export class BoardCardComponent {
-  @Input() title?: string = ''
+  @Input() name?: string = ''
   @Input() description?: string = ''
   @Input() footer?: boolean = false
   @Input() footerContent?: string[] = []
+  @Output() openModal = new EventEmitter<IBoard>();
+  boardData: IBoard = {}
+
+  openAddEditBoardModal(boardData: IBoard) {
+    this.openModal.emit(boardData);
+  }
 }

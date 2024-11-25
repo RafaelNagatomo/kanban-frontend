@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, Output } from '@angular/core'
 import { IBoard } from '../../shared/interfaces/board.interface'
 import { GraphqlService } from '../../shared/graphql/graphql.service'
 import { GET_ALL_BOARDS } from '../../shared/queries/board.queries'
@@ -18,9 +18,9 @@ export class HomeComponent {
   private boardsSubject = new BehaviorSubject<IBoard[]>([])
   boards$ = this.boardsSubject.asObservable()
   
+  @Output() boardData: IBoard = {}
   isModalOpen: boolean = false
   isEditMode: boolean = false
-  boardData: IBoard = {}
   newBoard: IBoard= {}
 
   constructor(private graphqlService: GraphqlService) {}
@@ -39,15 +39,24 @@ export class HomeComponent {
   openAddEditBoardModal(isEdit: boolean, board?: IBoard): void {
     this.isModalOpen = true
     this.isEditMode = isEdit
-    this.boardData = { ...board }
+    this.boardData = board ? { ...board } : {}
   }
 
   onModalClosed(): void {
-    this.isModalOpen = false;
+    this.isModalOpen = false
   }
 
-  newBoardAdd(newBoard: IBoard): void {
+  upsertRenderBoard(data: IBoard): void {
     const currentBoards = this.boardsSubject.value
-    this.boardsSubject.next([...currentBoards, newBoard])
+    const boardIndex = currentBoards.findIndex(board => board.id === data.id)
+
+    if (boardIndex !== -1) {
+      const updatedBoards = currentBoards.map((board, index) => 
+        index === boardIndex ? data : board
+      )
+      this.boardsSubject.next(updatedBoards)
+    } else {
+      this.boardsSubject.next([...currentBoards, data])
+    }
   }
 }

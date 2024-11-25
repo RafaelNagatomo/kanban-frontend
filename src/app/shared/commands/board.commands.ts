@@ -9,3 +9,15 @@ export const CREATE_BOARD_MUTATION = `
     }
   }
 `
+
+export const UPDATE_BOARD_MUTATION = `
+  mutation UpdateBoard($id: Int!, $data: UpdateBoardInput!) {
+    updateBoard(id: $id, data: $data) {
+      id
+      name
+      description
+      updatedBy
+      updatedAt
+    }
+  }
+`
