@@ -24,6 +24,8 @@ main
   color: $primary
 
 .btn-primary
+  display: flex
+  align-items: center
   height: 35px
   background-color: $primary
   color: $white
@@ -36,7 +38,29 @@ main
     background-color: color.adjust($primary, $lightness: 15%)
 
   &:active
-        background-color: color.adjust($primary, $lightness: 5%)
+    background-color: color.adjust($primary, $lightness: 5%)
+
+  &:disabled
+    background-color: $gray-400
+    color: $text-muted
+    cursor: not-allowed
+
+.btn-secondary
+  display: flex
+  align-items: center
+  height: 35px
+  background-color: $secondary
+  color: $white
+  border: none
+  border-radius: 8px
+  padding: 8px 16px
+  cursor: pointer
+
+  &:hover
+    background-color: color.adjust($secondary, $lightness: 15%)
+
+  &:active
+        background-color: color.adjust($secondary, $lightness: 5%)
 
   &:disabled
     background-color: $gray-400
@@ -44,6 +68,8 @@ main
     cursor: not-allowed
 
 .btn-cancel
+  display: flex
+  align-items: center
   background-color: $red
   color: $white
   border: none
@@ -80,6 +106,9 @@ main
   &:active
     box-shadow: $box-shadow-active-base
     transform: translateY(0)
+
+  .card-header
+    display: flex
 
   .card-title
     font-size: 18px
