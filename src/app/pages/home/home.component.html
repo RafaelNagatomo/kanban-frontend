@@ -1,7 +1,15 @@
 <main>
-  <h1 class="title">MEUS PROJETOS</h1>
+  <div class="row">
+    <h1 class="title">MEUS PROJETOS</h1>
+    <button
+      class="btn-primary"
+      (click)="openAddEditBoardModal(false)"
+    >
+      Criar
+    </button>
+  </div>
   <div class="container">
-    @for(board of this.boards; track board.id){
+    @for(board of boards$ | async; track board.id){
       <app-board-card
         [title]="board.name"
         [description]="board.description"
@@ -13,4 +21,12 @@
       ></app-board-card>
     }
   </div>
+  @if(isModalOpen){
+    <add-edit-board
+      [isOpen]="isModalOpen"
+      [isEdit]="isEditMode"
+      (modalClosed)="onModalClosed()"
+      (newBoardAdd)="newBoardAdd($event)"
+    ></add-edit-board>
+  }
 </main>

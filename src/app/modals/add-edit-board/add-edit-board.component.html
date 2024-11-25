@@ -1,0 +1,51 @@
+<div class="backdrop">
+  <div class="modal" open>
+    <form
+      method="dialog"
+      class="modal-container"
+      (ngSubmit)="submitForm()"
+      [formGroup]="boardForm"
+      #forDir="ngForm"
+    >
+      <h2>{{ isEdit ? 'Editar projeto' : 'Adicionar projeto' }}</h2>
+
+      <label for="name">Nome *</label>
+      <input
+        type="text"
+        placeholder="Digite o nome do board"
+        formControlName="name"
+        required
+      />
+      @if(
+        boardForm.get('name')?.invalid
+        && errors.name?.['required']
+        && forDir.submitted
+      ){
+        <span class="validation-error">Nome é obrigatório</span>
+      }
+
+      <label for="description">Descrição</label>
+      <textarea
+        placeholder="Digite a descrição"
+        formControlName="description"
+        rows="4"
+      ></textarea>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="closeModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn-primary"
+        >
+          Salvar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
