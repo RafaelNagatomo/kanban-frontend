@@ -11,4 +11,4 @@ export const GET_ALL_BOARDS = `
       userId
     }
   }
-`;
+`

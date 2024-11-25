@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './component/layout/header/header.component';
-import { FooterComponent } from './component/layout/footer/footer.component';
+import { Component } from '@angular/core'
+import { RouterOutlet } from '@angular/router'
+import { HeaderComponent } from './component/layout/header/header.component'
+import { FooterComponent } from './component/layout/footer/footer.component'
 
 @Component({
   selector: 'app-root',
@@ -15,5 +15,5 @@ import { FooterComponent } from './component/layout/footer/footer.component';
   styleUrl: './app.component.sass'
 })
 export class AppComponent {
-  title = 'kanban-frontend';
+  title = 'kanban-frontend'
 }
