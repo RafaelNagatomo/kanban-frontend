@@ -13,6 +13,8 @@ import {
   Validators
 } from '@angular/forms'
 import { GraphqlService } from '../../shared/graphql/graphql.service'
+import { IBoard } from '../../shared/interfaces/board.interface'
+import { CREATE_BOARD_MUTATION } from '../../shared/commands/board.commands'
 
 @Component({
   selector: 'add-edit-board',
@@ -50,27 +52,15 @@ export class AddEditBoardComponent {
   }
 
   submitForm() {
-    const CREATE_BOARD_MUTATION = `
-      mutation CreateBoard($data: CreateBoardInput!) {
-        createBoard(data: $data) {
-          id
-          name
-          description
-          userId
-          createdBy
-        }
-      }
-    `
+    if (this.boardForm.invalid) return
+
     const { name, description } = this.boardForm.value
-    const newBoard = {
+    const newBoard: IBoard = {
       name: name,
       description: description,
       userId: 3,
       createdBy: 3
     }
-
-    if (this.boardForm.invalid) return
-
     this.graphqlService.mutate(CREATE_BOARD_MUTATION, { data: newBoard }).subscribe({
       next: (result) => {
         if(result) {
