@@ -12,6 +12,7 @@
   <div class="container">
     @for(board of boards$ | async; track board.id){
       <app-board-card
+        (click)="openBoard(board)"
         (emitOpenAddEditBoardModal)="openAddEditBoardModal(true, board)"
         (emitOpenDeleteBoardModal)="openDeleteModal(board)"
         [name]="board.name"

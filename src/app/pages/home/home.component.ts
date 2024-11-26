@@ -8,6 +8,7 @@ import { AddEditBoardComponent } from '../../modals/add-edit-board/add-edit-boar
 import { BehaviorSubject } from 'rxjs'
 import { ConfirmModalComponent } from "../../modals/confirm-modal/confirm-modal.component";
 import { DELETE_BOARD_MUTATION } from '../../shared/commands/board.commands'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-home',
@@ -31,7 +32,7 @@ export class HomeComponent {
   isEditMode: boolean = false
   boardToDelete: IBoard = {}
 
-  constructor(private graphqlService: GraphqlService) {}
+  constructor(private graphqlService: GraphqlService, private router: Router) {}
 
   ngOnInit(): void {
     this.graphqlService.query(GET_ALL_BOARDS).subscribe({
@@ -95,5 +96,10 @@ export class HomeComponent {
       },
     })
     this.onDeleteBoardModalClosed()
+  }
+
+  openBoard(board?: IBoard): void {
+    if (!board) return
+    this.router.navigate(['/board', board.id])
   }
 }
