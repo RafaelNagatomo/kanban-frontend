@@ -1,0 +1,29 @@
+@if(!(columns$ | async)?.length){
+  <div class="empty-column-placeholder">
+    Crie sua primeira coluna
+  </div>
+}
+
+@for(column of columns$ | async; track column.id){
+  <div class="column">
+    <div class="card-header">
+      <h3 class="card-title">{{ column.name }}</h3>
+      <div class="header-actions">
+        <button class="btn-secondary">
+          <span class="material-symbols-outlined">edit</span>
+        </button>
+        <button class="btn-cancel">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+    </div>
+    <div class="card-body"></div>
+  </div>
+}
+
+<button
+  class="btn-primary"
+>
+  <span class="material-symbols-outlined">add</span>
+  Criar coluna
+</button>

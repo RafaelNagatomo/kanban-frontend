@@ -1,13 +1,9 @@
-<div *ngIf="board$ | async as board; else loading">
-  <h1>{{ board.name }}</h1>
-  <p><strong>ID:</strong> {{ board.id }}</p>
-  <p><strong>Descrição:</strong> {{ board.description }}</p>
-  <p><strong>createdAt:</strong> {{ board.createdAt }}</p>
-  <p><strong>createdBy:</strong> {{ board.createdBy }}</p>
-  <p><strong>updatedAt:</strong> {{ board.updatedAt }}</p>
-  <p><strong>updatedBy:</strong> {{ board.updatedBy }}</p>
-</div>
-
-<ng-template #loading>
-  <p>Carregando...</p>
-</ng-template>
+<main>
+  <div *ngIf="board$ | async as board">
+    <h2 class="title">{{ board.name }}</h2>
+    <app-column
+      class="row"
+      [boardId]="board.id!"
+    ></app-column>
+  </div>
+</main>
