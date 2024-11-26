@@ -37,9 +37,8 @@ export class HomeComponent {
   ngOnInit(): void {
     this.graphqlService.query(GET_ALL_BOARDS).subscribe({
       next: (result) => {
-        const filteredBoards = result.data.getAllBoards.filter(
-          (board: { userId: number }) => board.userId === 3
-        )
+        const filteredBoards = result.data.getAllBoards
+        .filter((board: { userId: number }) => board.userId === 3)
         this.boardsSubject.next(filteredBoards)
       },
     })

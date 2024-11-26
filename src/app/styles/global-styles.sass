@@ -18,6 +18,12 @@ main
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))
   grid-gap: 1rem
 
+.row
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin: $margin-base
+
 .title
   font-size: 18px
   font-weight: bold
@@ -110,6 +116,9 @@ main
 
   .card-header
     display: flex
+    justify-content: space-between
+    align-items: center
+    width: 100%
 
   .card-title
     font-size: 18px
