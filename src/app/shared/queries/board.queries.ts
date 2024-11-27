@@ -9,6 +9,10 @@ export const GET_ALL_BOARDS = `
       updatedAt
       updatedBy
       userId
+      columns {
+        id
+        name
+      }
     }
   }
 `

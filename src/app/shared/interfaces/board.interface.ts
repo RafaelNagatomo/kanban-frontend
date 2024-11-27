@@ -1,5 +1,5 @@
+import { IColumn } from "./column.interface"
 // import { IUser } from './user.interface'
-// import { IColumn } from './user.interface'
 
 export interface IBoard {
   id?: number
@@ -10,7 +10,7 @@ export interface IBoard {
   updatedAt?: Date
   updatedBy?: number
   userId?: number
+  columns?: IColumn[]
   // users?: IUser[]
-  // columns?: IColumn[]
 }
   
