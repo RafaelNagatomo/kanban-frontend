@@ -1,9 +1,18 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { IColumn } from '../../shared/interfaces/column.interface';
-import { GraphqlService } from '../../shared/graphql/graphql.service';
-import { GET_ALL_COLUMNS } from '../../shared/queries/column.queries';
-import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges
+} from '@angular/core'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { IColumn } from '../../shared/interfaces/column.interface'
+import { GraphqlService } from '../../shared/graphql/graphql.service'
+import { GET_ALL_COLUMNS } from '../../shared/queries/column.queries'
+import { CommonModule } from '@angular/common'
+import { ColumnService } from '../../shared/services/column.services'
 
 @Component({
   selector: 'app-column',
@@ -11,29 +20,37 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './column.component.html',
   styleUrl: './column.component.sass',
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnComponent implements OnChanges {
-  private columnsSubject = new BehaviorSubject<IColumn[]>([])
-  columns$ = this.columnsSubject.asObservable()
+  columns$!: Observable<IColumn[]>
   
   @Input() boardId!: number
+  @Output() emitOpenAddEditColumnModal = new EventEmitter<IColumn>()
 
-  constructor(private graphqlService: GraphqlService) {}
+  constructor(
+    private graphqlService: GraphqlService,
+    private columnService: ColumnService
+  ) {
+    this.columns$ = this.columnService.columns$
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['boardId'] && changes['boardId'].currentValue) {
-      this.loadAllColumnsData();
+      this.loadAllColumnsData()
     }
-    console.log(this.columns$)
   }
 
   private loadAllColumnsData(): void {
     this.graphqlService.query(GET_ALL_COLUMNS, { boardId: this.boardId }).subscribe({
       next: (result) => {
         const columns = result.data.getAllColumns
-        this.columnsSubject.next(columns)
+        this.columnService.setColumns(columns)
       },
     })
+  }
+
+  openAddEditColumnModal(columnData?: IColumn) {
+    this.emitOpenAddEditColumnModal.emit(columnData)
   }
 }

@@ -7,7 +7,7 @@
 @for(column of columns$ | async; track column.id){
   <div class="column">
     <div class="card-header">
-      <h3 class="card-title">{{ column.name }}</h3>
+      <h4>{{ column.name }}</h4>
       <div class="header-actions">
         <button class="btn-secondary">
           <span class="material-symbols-outlined">edit</span>
@@ -22,6 +22,7 @@
 }
 
 <button
+(click)="openAddEditColumnModal()"
   class="btn-primary"
 >
   <span class="material-symbols-outlined">add</span>
