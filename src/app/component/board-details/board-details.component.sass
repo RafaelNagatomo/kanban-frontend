@@ -1,8 +1,24 @@
 h2
-  padding: 0 30px
+  margin: 30px 5vh
   
-.row
-  position: fixed
-  margin: 0
-  padding: 0 20px
-  align-items: stretch
+app-column
+  display: flex
+  margin: 0 5vh
+
+.scroll-container
+  display: flex
+  overflow-x: auto
+  overflow-y: hidden
+  white-space: nowrap
+  gap: 16px
+  width: 100%
+
+.scroll-container::-webkit-scrollbar
+  height: 8px
+
+.scroll-container::-webkit-scrollbar-thumb
+  background: #888
+  border-radius: 4px
+
+.scroll-container::-webkit-scrollbar-thumb:hover 
+  background: #555
