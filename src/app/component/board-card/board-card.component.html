@@ -4,13 +4,13 @@
     <div class="header-actions">
       <button
         class="btn-secondary"
-        (click)="openAddEditBoardModal({ name, description })"
+        (click)="openAddEditBoardModal($event, { name, description })"
         >
         <span class="material-symbols-outlined">edit</span>
       </button>
       <button
         class="btn-cancel"
-        (click)="openDeleteBoardModal(boardData)"
+        (click)="openDeleteBoardModal($event, boardData)"
         >
         <span class="material-symbols-outlined">delete</span>
       </button>
