@@ -29,9 +29,7 @@ export class BoardDetailsComponent implements OnInit {
 
   @Output() columnData: IColumn = {}
   isAddEditColumnModalOpen: boolean = false
-  // isDeleteBoardModalOpen: boolean = false
   isEditMode: boolean = false
-  // boardToDelete: IBoard = {}
 
   constructor(private graphqlService: GraphqlService, private route: ActivatedRoute) {}
 
@@ -51,9 +49,9 @@ export class BoardDetailsComponent implements OnInit {
     })
   }
 
-  openAddEditColumnModal(isEdit: boolean, column?: IColumn): void {
+  openAddEditColumnModal(column?: IColumn): void {
     this.isAddEditColumnModalOpen = true
-    this.isEditMode = isEdit
+    this.isEditMode = column ? true : false
     this.columnData = column ? { ...column } : {}
   }
 

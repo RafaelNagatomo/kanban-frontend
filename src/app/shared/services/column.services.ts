@@ -47,7 +47,7 @@ export class ColumnService {
   updateColumn(updateColumnData: Partial<IColumn>): Promise<IColumn | null> {
     return new Promise((resolve, reject) => {
       this.graphqlService
-        .mutate(UPDATE_COLUMN_MUTATION, { id: updateColumnData.id, updateColumnData })
+        .mutate(UPDATE_COLUMN_MUTATION, { id: updateColumnData.id, data: updateColumnData })
         .subscribe({
           next: ({ data }) => {
             const updatedColumn = data?.updateColumn

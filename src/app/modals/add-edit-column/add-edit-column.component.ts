@@ -98,10 +98,10 @@ export class AddEditColumnComponent {
   async onUpdateForm(): Promise<void> {
     if (this.columnForm.invalid) return
     const { name } = this.columnForm.value;
-    const updateColumnData: Partial<IColumn> = {
+    const updateColumnData: IColumn = {
       id: this.columnData.id,
-      name,
-      updatedBy: 3,
+      name: name,
+      updatedBy: 3
     };
 
     try {

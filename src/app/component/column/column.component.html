@@ -9,7 +9,10 @@
     <div class="card-header">
       <h4>{{ column.name }}</h4>
       <div class="header-actions">
-        <button class="btn-secondary">
+        <button
+          (click)="openAddEditColumnModal(column)"
+          class="btn-secondary"
+        >
           <span class="material-symbols-outlined">edit</span>
         </button>
         <button
