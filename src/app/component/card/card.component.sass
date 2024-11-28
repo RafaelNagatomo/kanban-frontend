@@ -1,0 +1,50 @@
+@use '../../styles/variables' as *
+
+.column
+  display: flex
+  flex-direction: column
+  width: 250px
+  border-radius: 8px
+  background-color: $gray-300
+  box-shadow: $box-shadow-base
+  padding: 8px
+  margin: 8px
+  justify-content: space-between
+  
+.card-header
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+.btn-primary
+  justify-content: center
+  width: 250px
+  margin-top: 8px
+  background-color: $gray-300
+  color: $gray-900
+  font-weight: bold
+
+  &:hover
+    background-color: $gray-600
+    color: $white
+    font-weight: bold
+
+.btn-secondary
+  width: 25px
+  height: 30px
+  justify-content: center
+
+.btn-cancel
+  width: 25px
+  height: 30px
+  justify-content: center
+
+.empty-column-placeholder
+  padding: 8px 8px
+  margin: 2px
+  max-width: 100%
+  text-align: center
+  font-style: italic
+  color: $text-muted
+  border: 2px dashed #ccc
+  border-radius: 8px

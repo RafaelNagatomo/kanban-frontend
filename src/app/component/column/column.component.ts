@@ -14,11 +14,16 @@ import { GET_ALL_COLUMNS } from '../../shared/queries/column.queries'
 import { CommonModule } from '@angular/common'
 import { ColumnService } from '../../shared/services/column.services'
 import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component'
+import { CardComponent } from '../card/card.component'
 
 @Component({
   selector: 'app-column',
   standalone: true,
-  imports: [CommonModule, ConfirmModalComponent],
+  imports: [
+    CommonModule,
+    ConfirmModalComponent,
+    CardComponent
+  ],
   templateUrl: './column.component.html',
   styleUrl: './column.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,

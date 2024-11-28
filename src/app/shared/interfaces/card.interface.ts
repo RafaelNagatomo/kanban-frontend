@@ -1,14 +1,14 @@
-import { IBoard } from "./board.interface"
+import { IColumn } from "./column.interface"
 
-export interface IColumn {
+export interface ICard {
   id?: number
   name?: string
+  description?: string
   position?: number
   createdAt?: Date
   createdBy?: number
   updatedAt?: Date
   updatedBy?: number
-  userId?: number
-  board?: IBoard
-  boardId?: number
+  column?: IColumn
+  columnId?: number
 }
