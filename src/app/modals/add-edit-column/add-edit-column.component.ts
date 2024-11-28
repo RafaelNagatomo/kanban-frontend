@@ -13,12 +13,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms'
-import { GraphqlService } from '../../shared/graphql/graphql.service'
 import { IColumn } from '../../shared/interfaces/column.interface'
-import {
-  CREATE_COLUMN_MUTATION,
-  UPDATE_COLUMN_MUTATION
-} from '../../shared/commands/column.commands'
 import { ActivatedRoute } from '@angular/router'
 import { ColumnService } from '../../shared/services/column.services'
 
@@ -44,7 +39,6 @@ export class AddEditColumnComponent {
   boardId?: number
 
   constructor(
-    private graphqlService: GraphqlService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private columnService: ColumnService,
@@ -80,53 +74,46 @@ export class AddEditColumnComponent {
     this.emitModalClosed.emit()
   }
 
-  onCreateForm() {
+  async onCreateForm(): Promise<void> {
     if (this.columnForm.invalid) return
-
     const { name } = this.columnForm.value
-    const data: IColumn = {
+    const columnData: IColumn = {
       name: name,
       boardId: this.boardId,
       createdBy: 3
     }
-    this.graphqlService.mutate(CREATE_COLUMN_MUTATION, { data: data }).subscribe({
-      next: (result) => {
-        if(result) {
-          this.closeModal()
-          this.columnService.addColumn(result.data.createColumn)
-        } else {
-          console.error('Falha ao criar coluna')
-        }
-      },
-      error: (error) => {
-        console.error('Não foi possível concluir o registro:', error)
-        this.errorMessage = String(error)
-      },
-    })
+    try {
+      const result = await this.columnService.createColumn(columnData)
+      if (result) {
+        this.closeModal()
+      } else {
+        console.error('Falha ao criar coluna')
+      }
+    } catch (error) {
+      console.error('Não foi possível concluir o registro:', error)
+      this.errorMessage = String(error)
+    }
   }
 
-  onUpdateForm() {
+  async onUpdateForm(): Promise<void> {
     if (this.columnForm.invalid) return
-
-    const { name } = this.columnForm.value
-    const data: IColumn = {
+    const { name } = this.columnForm.value;
+    const updateColumnData: Partial<IColumn> = {
       id: this.columnData.id,
-      name: name,
-      updatedBy: 3
+      name,
+      updatedBy: 3,
+    };
+
+    try {
+      const result = await this.columnService.updateColumn(updateColumnData)
+      if (result) {
+        this.closeModal()
+      } else {
+        console.error('Falha ao atualizar coluna')
+      }
+    } catch (error) {
+      console.error('Não foi possível concluir a operação:', error)
+      this.errorMessage = String(error)
     }
-    this.graphqlService.mutate(UPDATE_COLUMN_MUTATION, { id: data.id, data: data }).subscribe({
-      next: (result) => {
-        if(result) {
-          this.closeModal()
-          this.columnService.updateColumn(result.data.updateColumn)
-        } else {
-          console.error('Falha ao atualizar coluna')
-        }
-      },
-      error: (error) => {
-        console.error('Não foi possível concluir a operação:', error)
-        this.errorMessage = String(error)
-      },
-    })
   }
 }

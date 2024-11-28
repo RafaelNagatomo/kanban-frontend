@@ -1,31 +1,72 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
 import { IColumn } from '../interfaces/column.interface'
+import { GraphqlService } from '../graphql/graphql.service'
+import {
+  CREATE_COLUMN_MUTATION,
+  UPDATE_COLUMN_MUTATION
+} from '../commands/column.commands'
 
 @Injectable({ providedIn: 'root' })
 export class ColumnService {
   private columnsSubject = new BehaviorSubject<IColumn[]>([])
   columns$ = this.columnsSubject.asObservable()
 
+  constructor(private graphqlService: GraphqlService) {}
+
   setColumns(columns: IColumn[]): void {
     this.columnsSubject.next(columns)
   }
 
-  addColumn(data: IColumn): void {
-    const currentColumns = this.columnsSubject.value;  
-    this.columnsSubject.next([...currentColumns, data])
+  createColumn(columnData: Partial<IColumn>): Promise<IColumn | null> {
+    return new Promise((resolve, reject) => {
+      this.graphqlService
+      .mutate(CREATE_COLUMN_MUTATION, { data: columnData })
+      .subscribe({
+        next: ({ data }) => {
+          const createdColumn = data?.createColumn || null
+
+          if (createdColumn) {
+            const currentColumns = this.columnsSubject.value
+            this.columnsSubject.next([...currentColumns, createdColumn])
+            resolve(createdColumn)
+          } else {
+            console.error('Falha ao criar coluna')
+            resolve(null)
+          }
+        },
+        error: (error: any) => {
+          console.error('Erro ao criar coluna:', error)
+          reject(error)
+        },
+      })
+    })
   }
 
-  updateColumn(data: IColumn): void {
-    const currentColumns = this.columnsSubject.value
-    const columnIndex = currentColumns.findIndex(column => column.id === data.id)
+  updateColumn(updateColumnData: Partial<IColumn>): Promise<IColumn | null> {
+    return new Promise((resolve, reject) => {
+      this.graphqlService
+        .mutate(UPDATE_COLUMN_MUTATION, { id: updateColumnData.id, updateColumnData })
+        .subscribe({
+          next: ({ data }) => {
+            const updatedColumn = data?.updateColumn
   
-    if (columnIndex !== -1) {
-      const updatedColumns = [...currentColumns]
-      updatedColumns[columnIndex] = data
-      this.columnsSubject.next(updatedColumns)
-    } else {
-      console.warn(`Column with id ${data.id} not found for update.`)
-    }
-  }  
+            if (updatedColumn) {
+              const currentColumns = this.columnsSubject.value
+              const updatedColumns = currentColumns.map(column =>
+              column.id === updatedColumn.id ? updatedColumn : column)
+              this.columnsSubject.next(updatedColumns)
+              resolve(updatedColumn)
+            } else {
+              console.error('Falha ao atualizar coluna')
+              return resolve(null)
+            }          
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar coluna:', error)
+            reject(error);
+          },
+        })
+    })
+  }
 }
