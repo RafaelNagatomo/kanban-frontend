@@ -12,7 +12,10 @@
         <button class="btn-secondary">
           <span class="material-symbols-outlined">edit</span>
         </button>
-        <button class="btn-cancel">
+        <button
+          (click)="openDeleteModal(column)"
+          class="btn-cancel"
+        >
           <span class="material-symbols-outlined">delete</span>
         </button>
       </div>
@@ -22,9 +25,19 @@
 }
 
 <button
-(click)="openAddEditColumnModal()"
+  (click)="openAddEditColumnModal()"
   class="btn-primary"
 >
   <span class="material-symbols-outlined">add</span>
   Criar coluna
 </button>
+
+@if(isDeleteColumnModalOpen){
+  <app-confirm-modal
+    [isOpen]="isDeleteColumnModalOpen"
+    [title]="'Deletar coluna'"
+    [message]="'Tem certeza que deseja deletar esta coluna? Esta ação é irreversível.'"
+    (emitConfirm)="handleDeletionColumn()"
+    (emitModalClosed)="onDeleteColumnModalClosed()"
+  ></app-confirm-modal>
+}
