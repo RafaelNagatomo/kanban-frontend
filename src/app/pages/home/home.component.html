@@ -2,13 +2,20 @@
   <div class="row">
     <h1 class="title">MEUS PROJETOS</h1>
     <button
-      class="btn-primary"
-      (click)="openAddEditBoardModal(false)"
+    class="btn-primary"
+    (click)="openAddEditBoardModal(false)"
     >
     <span class="material-symbols-outlined">add</span>
-      Criar
-    </button>
-  </div>
+    Criar
+  </button>
+</div>
+
+  @if(!(boards$ | async)?.length){
+    <div class="empty-board-placeholder">
+      Crie seu primeiro projeto
+    </div>
+  }
+
   <div class="container">
     @for(board of boards$ | async; track board.id){
       <app-board-card
