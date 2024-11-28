@@ -93,7 +93,7 @@ export class AddEditColumnComponent {
       next: (result) => {
         if(result) {
           this.closeModal()
-          this.columnService.upsertRenderColumn(result.data)
+          this.columnService.addColumn(result.data.createColumn)
         } else {
           console.error('Falha ao criar coluna')
         }
@@ -118,7 +118,7 @@ export class AddEditColumnComponent {
       next: (result) => {
         if(result) {
           this.closeModal()
-          this.columnService.upsertRenderColumn(result.data)
+          this.columnService.updateColumn(result.data.updateColumn)
         } else {
           console.error('Falha ao atualizar coluna')
         }

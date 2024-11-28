@@ -11,16 +11,21 @@ export class ColumnService {
     this.columnsSubject.next(columns)
   }
 
-  upsertRenderColumn(data: IColumn): void {
+  addColumn(data: IColumn): void {
+    const currentColumns = this.columnsSubject.value;  
+    this.columnsSubject.next([...currentColumns, data])
+  }
+
+  updateColumn(data: IColumn): void {
     const currentColumns = this.columnsSubject.value
     const columnIndex = currentColumns.findIndex(column => column.id === data.id)
-
+  
     if (columnIndex !== -1) {
       const updatedColumns = [...currentColumns]
       updatedColumns[columnIndex] = data
       this.columnsSubject.next(updatedColumns)
     } else {
-      this.columnsSubject.next([...currentColumns, data])
+      console.warn(`Column with id ${data.id} not found for update.`)
     }
-  }
+  }  
 }
