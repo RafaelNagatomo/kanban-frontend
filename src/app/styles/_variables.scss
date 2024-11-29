@@ -78,8 +78,8 @@ $margin-base:                 0 10vw 0 10vw;
 
 $primary:                     $gray-600 !default;
 $secondary:                   $green !default;
-$bg-primary:                  $gray-200 !default;
-$bg-secondary:                color.adjust($yellow, $lightness: 16%) !default;
+$bg-primary:                  $gray-100 !default;
+$bg-secondary:                $gray-200 !default;
 
 $text-muted:                  $gray-500 !default;
 $text-color:                  $gray-900 !default;
