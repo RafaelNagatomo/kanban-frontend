@@ -1,61 +1,67 @@
-@if(!(cards$ | async)?.length){
-  <div class="empty-card-placeholder">
-    Arraste os cards para cá.
-  </div>
-}
-  
-@for(card of cards$ | async; track card.id){
-  <div class="card">
-    <div class="card-header">
-      <h4>{{ card.name }}</h4>
-      <div class="header-actions">
-
-        <button
-          (click)="openAddEditCardModal(card)"
-          class="btn-secondary"
-        >
-          <span class="material-symbols-outlined">edit</span>
-        </button>
-
-        <button
-          (click)="openDeleteModal(card)"
-          class="btn-cancel"
-        >
-          <span class="material-symbols-outlined">delete</span>
-        </button>
-
-      </div>
-    </div>
-
-    <p class="card-body">{{ card.description }}</p>
-  </div>
-}
-
-<button
-  (click)="openAddEditCardModal()"
-  class="btn-primary"
+<div
+  cdkDropList
+  [cdkDropListData]="cards$ | async"
+  (cdkDropListDropped)="moveTask($event)"
 >
-  <span class="material-symbols-outlined">add</span>
-  Criar card
-</button>
+  @if(!(cards$ | async)?.length){
+    <span class="blank"></span>
+  }
 
-@if(isDeleteCardModalOpen){
-  <app-confirm-modal
-    [isOpen]="isDeleteCardModalOpen"
-    [title]="'Deletar card'"
-    [message]="'Tem certeza que deseja deletar este card? Esta ação é irreversível.'"
-    (emitConfirm)="handleDeletionColumn()"
-    (emitModalClosed)="onDeleteCardModalClosed()"
-  ></app-confirm-modal>
-}
+  @for(card of cards$ | async; track card.id){
+    <div
+      class="card"
+      cdkDrag
+    >
+      <div class="card-header">
+        <h4>{{ card.name }}</h4>
+        <div class="header-actions">
 
-@if(isAddEditCardModalOpen){
-  <app-add-edit-card
-    [isOpen]="isAddEditCardModalOpen"
-    [isEdit]="isEditMode"
-    (emitModalClosed)="onCardModalClosed()"
-    [cardData]="this.cardData"
-    [columnId]="this.columnId!"
-  ></app-add-edit-card>
-}
-  
+          <button
+            (click)="openAddEditCardModal(card)"
+            class="btn-secondary"
+          >
+            <span class="material-symbols-outlined">edit</span>
+          </button>
+
+          <button
+            (click)="openDeleteModal(card)"
+            class="btn-cancel"
+          >
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+
+        </div>
+      </div>
+
+      <p class="card-body">{{ card.description }}</p>
+    </div>
+  }
+</div>
+
+  <button
+    (click)="openAddEditCardModal()"
+    class="btn-primary"
+  >
+    <span class="material-symbols-outlined">add</span>
+    Criar card
+  </button>
+
+  @if(isDeleteCardModalOpen){
+    <app-confirm-modal
+      [isOpen]="isDeleteCardModalOpen"
+      [title]="'Deletar card'"
+      [message]="'Tem certeza que deseja deletar este card? Esta ação é irreversível.'"
+      (emitConfirm)="handleDeletionColumn()"
+      (emitModalClosed)="onDeleteCardModalClosed()"
+    ></app-confirm-modal>
+  }
+
+  @if(isAddEditCardModalOpen){
+    <app-add-edit-card
+      [isOpen]="isAddEditCardModalOpen"
+      [isEdit]="isEditMode"
+      (emitModalClosed)="onCardModalClosed()"
+      [cardData]="this.cardData"
+      [columnId]="this.columnId!"
+    ></app-add-edit-card>
+  }

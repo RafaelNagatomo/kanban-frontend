@@ -3,7 +3,10 @@
 
     <h2 class="title">{{ board.name }}</h2>
 
-    <div class="column-container">
+    <div
+      class="column-container" 
+      cdkDropListGroup
+    >
       <app-column
         [boardId]="board.id!"
         (emitOpenAddEditColumnModal)="openAddEditColumnModal($event)"

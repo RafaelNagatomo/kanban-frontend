@@ -66,7 +66,7 @@ main
     background-color: color.adjust($secondary, $lightness: 15%)
 
   &:active
-        background-color: color.adjust($secondary, $lightness: 5%)
+    background-color: color.adjust($secondary, $lightness: 5%)
 
   &:disabled
     background-color: $gray-400
@@ -232,3 +232,16 @@ main
   display: flex
   justify-content: flex-end
   gap: 4px
+
+.cdk-drag-preview
+  opacity: 0.9
+  transform: rotate(3deg)
+  box-shadow: $box-shadow-hover-base
+
+.cdk-drag-placeholder
+  outline: 2px solid $gray-500
+  opacity: 0.3
+
+.cdk-drop-list-dragging
+  outline-offset: 2px
+  border-radius: 8px

@@ -7,7 +7,7 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core'
-import { Observable } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { IColumn } from '../../shared/interfaces/column.interface'
 import { GraphqlService } from '../../shared/graphql/graphql.service'
 import { GET_ALL_COLUMNS } from '../../shared/queries/column.queries'
@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common'
 import { ColumnService } from '../../shared/services/column.services'
 import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component'
 import { CardComponent } from '../card/card.component'
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop'
 
 @Component({
   selector: 'app-column',
@@ -22,14 +23,17 @@ import { CardComponent } from '../card/card.component'
   imports: [
     CommonModule,
     ConfirmModalComponent,
-    CardComponent
+    CardComponent,
+    DragDropModule
   ],
   templateUrl: './column.component.html',
   styleUrl: './column.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnComponent implements OnChanges {
-  columns$!: Observable<IColumn[]>
+  private columnsSubject = new BehaviorSubject<IColumn[]>([])
+  columns$: Observable<IColumn[]> = this.columnsSubject.asObservable()
+
   isDeleteColumnModalOpen: boolean = false
   columnToDelete: IColumn = {}
   errorMessage: string = ''
@@ -41,7 +45,9 @@ export class ColumnComponent implements OnChanges {
     private graphqlService: GraphqlService,
     private columnService: ColumnService
   ) {
-    this.columns$ = this.columnService.columns$
+    this.columnService.columns$.subscribe(columns => {
+      this.columnsSubject.next(columns)
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -86,5 +92,19 @@ export class ColumnComponent implements OnChanges {
       console.error('Não foi possível concluir a operação:', error)
       this.errorMessage = String(error)
     }
+  }
+
+  moveColumnList(fromIndex: number, toIndex: number): void {
+    const currentColumns = this.columnsSubject.getValue()
+    moveItemInArray(currentColumns, fromIndex, toIndex)
+    this.columnsSubject.next(currentColumns);
+  }
+
+  moveList(dropEvent: CdkDragDrop<IColumn[]>): void {
+    const { previousIndex, currentIndex } = dropEvent
+    if (previousIndex === currentIndex) {
+      return
+    }
+    this.moveColumnList(previousIndex, currentIndex)
   }
 }

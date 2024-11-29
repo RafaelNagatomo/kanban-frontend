@@ -1,49 +1,63 @@
-@if(!(columns$ | async)?.length){
-  <div class="empty-column-placeholder">
-    Crie sua primeira coluna
-  </div>
-}
+<div
+  cdkDropListGroup
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  (cdkDropListDropped)="moveList($event)"
+  class="parent"
+>
+  @if(!(columns$ | async)?.length){
+    <div class="empty-column-placeholder">
+      Crie sua primeira coluna
+    </div>
+  }
 
-@for(column of columns$ | async; track column.id){
-  <div class="column">
-    <div class="card-header">
-      <h4>{{ column.name }}</h4>
-      <div class="header-actions">
-        <button
-          (click)="openAddEditColumnModal(column)"
-          class="btn-secondary"
-        >
-          <span class="material-symbols-outlined">edit</span>
-        </button>
+  @for(column of columns$ | async; track column.id){
+    <div
+      cdkDrag
+      cdkDragPreviewContainer="parent"
+      class="column"
+    >
+      <div class="card-header">
+        <h4>{{ column.name }}</h4>
+        <div class="header-actions">
+          <button
+            (click)="openAddEditColumnModal(column)"
+            class="btn-secondary"
+          >
+            <span class="material-symbols-outlined">edit</span>
+          </button>
 
-        <button
-          (click)="openDeleteModal(column)"
-          class="btn-cancel"
-        >
-          <span class="material-symbols-outlined">delete</span>
-        </button>
+          <button
+            (click)="openDeleteModal(column)"
+            class="btn-cancel"
+          >
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <app-card
+          [columnId]="column.id"
+        ></app-card>
       </div>
     </div>
-    <div class="card-body">
-      <app-card [columnId]="column.id"></app-card>
-    </div>
-  </div>
-}
+  }
 
-<button
-  (click)="openAddEditColumnModal()"
-  class="btn-primary"
->
-  <span class="material-symbols-outlined">add</span>
-  Criar coluna
-</button>
+  <button
+    (click)="openAddEditColumnModal()"
+    class="btn-primary"
+  >
+    <span class="material-symbols-outlined">add</span>
+    Criar coluna
+  </button>
 
-@if(isDeleteColumnModalOpen){
-  <app-confirm-modal
-    [isOpen]="isDeleteColumnModalOpen"
-    [title]="'Deletar coluna'"
-    [message]="'Tem certeza que deseja deletar esta coluna? Esta ação é irreversível.'"
-    (emitConfirm)="handleDeletionColumn()"
-    (emitModalClosed)="onDeleteColumnModalClosed()"
-  ></app-confirm-modal>
-}
+  @if(isDeleteColumnModalOpen){
+    <app-confirm-modal
+      [isOpen]="isDeleteColumnModalOpen"
+      [title]="'Deletar coluna'"
+      [message]="'Tem certeza que deseja deletar esta coluna? Esta ação é irreversível.'"
+      (emitConfirm)="handleDeletionColumn()"
+      (emitModalClosed)="onDeleteColumnModalClosed()"
+    ></app-confirm-modal>
+  }
+</div>

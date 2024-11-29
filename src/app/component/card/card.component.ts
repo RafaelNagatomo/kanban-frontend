@@ -15,6 +15,7 @@ import { GraphqlService } from '../../shared/graphql/graphql.service'
 import { GET_ALL_CARDS } from '../../shared/queries/card.queries'
 import { CardService } from '../../shared/services/card.services'
 import { AddEditCardComponent } from '../../modals/add-edit-card/add-edit-card.component'
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop'
 
 @Component({
   selector: 'app-card',
@@ -22,7 +23,8 @@ import { AddEditCardComponent } from '../../modals/add-edit-card/add-edit-card.c
   imports: [
     CommonModule,
     ConfirmModalComponent,
-    AddEditCardComponent
+    AddEditCardComponent,
+    DragDropModule
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.sass',
@@ -94,6 +96,42 @@ export class CardComponent implements OnChanges {
     } catch (error) {
       console.error('Não foi possível concluir a operação:', error)
       this.errorMessage = String(error)
+    }
+  }
+
+  reorderTask(list: ICard[], fromIndex: number, toIndex: number): void {
+    moveItemInArray(list, fromIndex, toIndex)
+  }
+
+  transferTask(
+    previousList: ICard[],
+    currentList: ICard[],
+    fromIndex: number,
+    toIndex: number
+  ): void {
+    transferArrayItem(previousList, currentList, fromIndex, toIndex)
+  }
+
+  moveTask(dropEvent: CdkDragDrop<ICard[] | null>): void {
+    const { previousContainer, container, previousIndex, currentIndex } = dropEvent
+    const isSameContainer = previousContainer === container
+
+    const previousData = previousContainer.data || []
+    const currentData = container.data || []
+  
+    if (isSameContainer && previousIndex === currentIndex) {
+      return
+    }
+    if (isSameContainer) {
+      this.reorderTask(currentData, previousIndex, currentIndex)
+    } else {
+      this.transferTask(previousData, currentData, previousIndex, currentIndex)
+      
+      const movedCard = currentData[currentIndex]
+      if (movedCard) {
+        const newColumnId = this.columnId ?? 0
+        // this.updateCardColumn(movedCard, newColumnId)
+      }
     }
   }
 }
