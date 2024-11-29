@@ -42,8 +42,8 @@ export class AddEditBoardComponent {
 
   constructor(private graphqlService: GraphqlService, private fb: FormBuilder) {
     this.boardForm = this.fb.group({
-      name: [''],
-      description: ['', Validators.required],
+      name: ['', Validators.required],
+      description: [''],
     });
   }
 
