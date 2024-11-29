@@ -30,57 +30,66 @@ export class CardService {
     this.cardsSubject.get(columnId)!.next(cards)
   }
 
-  // createCard(cardData: Partial<ICard>): Promise<ICard | null> {
-  //   return new Promise((resolve, reject) => {
-  //     this.graphqlService
-  //     .mutate(CREATE_CARD_MUTATION, { data: cardData })
-  //     .subscribe({
-  //       next: ({ data }) => {
-  //         const createdCard = data?.createCard || null
+  createCard(cardData: Partial<ICard>, columnId: number): Promise<ICard | null> {
+    console.log(cardData)
+    return new Promise((resolve, reject) => {
+      this.graphqlService
+      .mutate(CREATE_CARD_MUTATION, { data: cardData })
+      .subscribe({
+        next: ({ data }) => {
+          const createdCard = data?.createCard || null
 
-  //         if (createdCard) {
-  //           const currentCard = this.cardsSubject.value
-  //           this.cardsSubject.next([...currentCard, createdCard])
-  //           resolve(createdCard)
-  //         } else {
-  //           console.error('Falha ao criar card')
-  //           resolve(null)
-  //         }
-  //       },
-  //       error: (error: any) => {
-  //         console.error('Erro ao criar card:', error)
-  //         reject(error)
-  //       },
-  //     })
-  //   })
-  // }
+          if (createdCard) {
+            let columnCardsSubject = this.cardsSubject.get(columnId)
 
-  // updateCard(updateCardData: Partial<ICard>): Promise<ICard | null> {
-  //   return new Promise((resolve, reject) => {
-  //     this.graphqlService
-  //       .mutate(UPDATE_CARD_MUTATION, { id: updateCardData.id, data: updateCardData })
-  //       .subscribe({
-  //         next: ({ data }) => {
-  //           const updatedCard = data?.updateCard
+            if (!columnCardsSubject) {
+              columnCardsSubject = new BehaviorSubject<ICard[]>([])
+              this.cardsSubject.set(columnId, columnCardsSubject)
+            }
+              const currentCards = columnCardsSubject.value
+              columnCardsSubject.next([...currentCards, createdCard])
+
+              resolve(createdCard)
+          } else {
+            console.error('Falha ao criar card')
+            resolve(null)
+          }
+        },
+        error: (error: any) => {
+          console.error('Erro ao criar card:', error)
+          reject(error)
+        },
+      })
+    })
+  }
+
+  updateCard(updateCardData: Partial<ICard>): Promise<ICard | null> {
+    return new Promise((resolve, reject) => {
+      this.graphqlService
+        .mutate(UPDATE_CARD_MUTATION, { id: updateCardData.id, data: updateCardData })
+        .subscribe({
+          next: ({ data }) => {
+            const updatedCard = data?.updateCard
   
-  //           if (updatedCard) {
-  //             const currentCard = this.cardsSubject.value
-  //             const updatedCards = currentCard.map(card =>
-  //               card.id === updatedCard.id ? updatedCard : card)
-  //             this.cardsSubject.next(updatedCards)
-  //             resolve(updatedCard)
-  //           } else {
-  //             console.error('Falha ao atualizar card')
-  //             return resolve(null)
-  //           }
-  //         },
-  //         error: (error) => {
-  //           console.error('Erro ao atualizar card:', error)
-  //           reject(error)
-  //         },
-  //       })
-  //   })
-  // }
+            // if (updatedCard) {
+            //   const columnCardsSubject = this.cardsByColumn.get(columnId)
+            //   const currentCard = this.cardsSubject.value
+            //   const updatedCards = currentCard.map(card =>
+            //     card.id === updatedCard.id ? updatedCard : card)
+            //   this.cardsSubject.next(updatedCards)
+            //   resolve(updatedCard)
+            // } else {
+            //   console.error('Falha ao atualizar card')
+            //   return resolve(null)
+            // }
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar card:', error)
+            reject(error)
+          },
+        })
+    })
+  }
 
   deleteCard(deleteCardData: Partial<ICard>, columnId: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
@@ -100,7 +109,7 @@ export class CardService {
                 )
                 columnCardsSubject.next(updatedCards)
               }
-              
+
               resolve(true)
             } else {
               console.error('Falha ao deletar a card')

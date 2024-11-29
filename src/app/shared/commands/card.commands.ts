@@ -3,6 +3,7 @@ export const CREATE_CARD_MUTATION = `
     createCard(data: $data) {
       id
       name
+      description
       position
       createdBy
       columnId
@@ -15,6 +16,7 @@ export const UPDATE_CARD_MUTATION = `
     updateCard(id: $id, data: $data) {
       id
       name
+      description
       position
       updatedBy
       updatedAt

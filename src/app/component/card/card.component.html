@@ -10,6 +10,7 @@
       <h4>{{ card.name }}</h4>
       <div class="header-actions">
         <button
+          (click)="openAddEditCardModal(card)"
           class="btn-secondary"
         >
           <span class="material-symbols-outlined">edit</span>
@@ -29,7 +30,7 @@
 }
 
 <button
-  (click)="openAddEditColumnModal()"
+  (click)="openAddEditCardModal()"
   class="btn-primary"
 >
   <span class="material-symbols-outlined">add</span>
@@ -44,5 +45,15 @@
     (emitConfirm)="handleDeletionColumn()"
     (emitModalClosed)="onDeleteCardModalClosed()"
   ></app-confirm-modal>
+}
+
+@if(isAddEditCardModalOpen){
+  <app-add-edit-card
+    [isOpen]="isAddEditCardModalOpen"
+    [isEdit]="isEditMode"
+    (emitModalClosed)="onCardModalClosed()"
+    [cardData]="this.cardData"
+    [columnId]="this.columnId"
+  ></app-add-edit-card>
 }
   

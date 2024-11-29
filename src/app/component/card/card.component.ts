@@ -12,11 +12,16 @@ import { ICard } from '../../shared/interfaces/card.interface'
 import { GraphqlService } from '../../shared/graphql/graphql.service'
 import { GET_ALL_CARDS } from '../../shared/queries/card.queries'
 import { CardService } from '../../shared/services/card.services'
+import { AddEditCardComponent } from '../../modals/add-edit-card/add-edit-card.component'
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [CommonModule, ConfirmModalComponent],
+  imports: [
+    CommonModule,
+    ConfirmModalComponent,
+    AddEditCardComponent
+  ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,10 +29,13 @@ import { CardService } from '../../shared/services/card.services'
 export class CardComponent implements OnChanges {
   cards$!: Observable<ICard[]>
   isDeleteCardModalOpen: boolean = false
+  isAddEditCardModalOpen: boolean = false
+  isEditMode: boolean = false
   cardToDelete: ICard = {}
+  cardData: ICard = {}
   errorMessage: string = ''
   
-  @Input() columnId?: number
+  @Input() columnId!: number
   @Output() emitOpenAddEditCardModal = new EventEmitter<ICard>()
 
   constructor(
@@ -52,13 +60,20 @@ export class CardComponent implements OnChanges {
     this.cards$ = this.cardService.getCardsByColumn(this.columnId!)
   }
 
+  openAddEditCardModal(card?: ICard): void {
+    this.isAddEditCardModalOpen = true
+    this.isEditMode = card ? true : false
+    this.cardData = card ? { ...card } : {}
+    console.log('openAddEditCardModal: ', card)
+  }
+
+  onCardModalClosed() {
+    this.isAddEditCardModalOpen = false
+  }
+
   openDeleteModal(card: ICard): void {
     this.cardToDelete = card
     this.isDeleteCardModalOpen = true
-  }
-
-  openAddEditColumnModal(cardData?: ICard) {
-    this.emitOpenAddEditCardModal.emit(cardData)
   }
 
   onDeleteCardModalClosed(): void {
