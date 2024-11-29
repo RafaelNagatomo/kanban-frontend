@@ -11,7 +11,6 @@ import {
 @Injectable({ providedIn: 'root' })
 export class CardService {
   private cardsSubject = new Map<number, BehaviorSubject<ICard[]>>([])
-  // cards$ = this.cardsSubject.asObservable()
 
   constructor(private graphqlService: GraphqlService) {}
 
@@ -63,25 +62,33 @@ export class CardService {
     })
   }
 
-  updateCard(updateCardData: Partial<ICard>): Promise<ICard | null> {
+  updateCard(updateCardData: Partial<ICard>, columnId: number): Promise<ICard | null> {
     return new Promise((resolve, reject) => {
       this.graphqlService
         .mutate(UPDATE_CARD_MUTATION, { id: updateCardData.id, data: updateCardData })
         .subscribe({
           next: ({ data }) => {
-            const updatedCard = data?.updateCard
+            const updatedCard = data?.updateCard || null
   
-            // if (updatedCard) {
-            //   const columnCardsSubject = this.cardsByColumn.get(columnId)
-            //   const currentCard = this.cardsSubject.value
-            //   const updatedCards = currentCard.map(card =>
-            //     card.id === updatedCard.id ? updatedCard : card)
-            //   this.cardsSubject.next(updatedCards)
-            //   resolve(updatedCard)
-            // } else {
-            //   console.error('Falha ao atualizar card')
-            //   return resolve(null)
-            // }
+            if (updatedCard) {
+              let columnCardsSubject = this.cardsSubject.get(columnId)
+
+              if (!columnCardsSubject) {
+                columnCardsSubject = new BehaviorSubject<ICard[]>([])
+                this.cardsSubject.set(columnId, columnCardsSubject)
+              }
+
+              const currentCard = columnCardsSubject.value
+              const updatedCards = currentCard.map(card =>
+                card.id === updatedCard.id ? updatedCard : card
+              )
+              columnCardsSubject.next(updatedCards)
+              
+              resolve(updatedCard)
+            } else {
+              console.error('Falha ao atualizar card')
+              return resolve(null)
+            }
           },
           error: (error) => {
             console.error('Erro ao atualizar card:', error)
@@ -104,8 +111,8 @@ export class CardService {
 
               if (columnCardsSubject) {
                 const currentCards = columnCardsSubject.value
-                const updatedCards = currentCards.filter(
-                  card => card.id !== deleteCardData.id
+                const updatedCards = currentCards.filter(card =>
+                  card.id !== deleteCardData.id
                 )
                 columnCardsSubject.next(updatedCards)
               }

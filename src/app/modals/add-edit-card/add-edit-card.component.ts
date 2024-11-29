@@ -90,15 +90,16 @@ export class AddEditCardComponent {
 
   async onUpdateForm(): Promise<void> {
     if (this.cardForm.invalid) return
-    const { name } = this.cardForm.value;
+    const { name, description } = this.cardForm.value;
     const updateCardData: ICard = {
       id: this.cardData.id,
       name: name,
+      description: description,
       updatedBy: 3
     };
 
     try {
-      const result = await this.cardService.updateCard(updateCardData)
+      const result = await this.cardService.updateCard(updateCardData, this.columnId)
       if (result) {
         this.closeModal()
       } else {
