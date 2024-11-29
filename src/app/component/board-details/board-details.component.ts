@@ -31,7 +31,10 @@ export class BoardDetailsComponent implements OnInit {
   isAddEditColumnModalOpen: boolean = false
   isEditMode: boolean = false
 
-  constructor(private graphqlService: GraphqlService, private route: ActivatedRoute) {}
+  constructor(
+    private graphqlService: GraphqlService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     const boardId = +this.route.snapshot.params['id']!
@@ -41,7 +44,8 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   private loadBoardDataById(boardId: number): void {
-    this.graphqlService.query(GET_BOARD_BY_ID, { id: boardId }).subscribe({
+    this.graphqlService.query(GET_BOARD_BY_ID, { id: boardId })
+    .subscribe({
       next: (result) => {
         const board = result.data.getBoardById
         this.boardsSubject.next(board)

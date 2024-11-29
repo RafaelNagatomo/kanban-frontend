@@ -3,6 +3,7 @@ import { IBoard } from '../../shared/interfaces/board.interface'
 
 @Component({
   selector: 'app-board-card',
+  standalone: true,
   imports: [],
   templateUrl: './board-card.component.html',
   styleUrl: './board-card.component.sass'

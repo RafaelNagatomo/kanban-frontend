@@ -1,13 +1,15 @@
 <main class="scroll-container">
   <div *ngIf="board$ | async as board" >
+
     <h2 class="title">{{ board.name }}</h2>
+
     <div class="column-container">
       <app-column
         [boardId]="board.id!"
         (emitOpenAddEditColumnModal)="openAddEditColumnModal($event)"
       ></app-column>
     </div>
-    </div>
+  </div>
 
   @if(isAddEditColumnModalOpen){
     <app-add-edit-column

@@ -6,7 +6,7 @@ import { BoardCardComponent } from '../../component/board-card/board-card.compon
 import { CommonModule } from '@angular/common'
 import { AddEditBoardComponent } from '../../modals/add-edit-board/add-edit-board.component'
 import { BehaviorSubject } from 'rxjs'
-import { ConfirmModalComponent } from "../../modals/confirm-modal/confirm-modal.component";
+import { ConfirmModalComponent } from "../../modals/confirm-modal/confirm-modal.component"
 import { DELETE_BOARD_MUTATION } from '../../shared/commands/board.commands'
 import { Router } from '@angular/router'
 
@@ -80,7 +80,8 @@ export class HomeComponent {
   handleDeletionBoard(): void {
     if (!this.boardToDelete) return
 
-    this.graphqlService.mutate(DELETE_BOARD_MUTATION, { id: this.boardToDelete.id }).subscribe({
+    this.graphqlService.mutate(DELETE_BOARD_MUTATION, { id: this.boardToDelete.id })
+    .subscribe({
       next: (result) => {
         if (result) {
           const currentBoards = this.boardsSubject.value
@@ -90,7 +91,7 @@ export class HomeComponent {
             )
           this.boardsSubject.next([...updatedBoards])
         } else {
-          console.error('Falha ao deletar a coluna');
+          console.error('Falha ao deletar a coluna')
         }
       },
     })

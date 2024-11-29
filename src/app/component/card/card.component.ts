@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component,
+import {
+  ChangeDetectionStrategy,
+  Component,
   EventEmitter,
   Input,
   OnChanges,
@@ -35,7 +37,7 @@ export class CardComponent implements OnChanges {
   cardData: ICard = {}
   errorMessage: string = ''
   
-  @Input() columnId!: number
+  @Input() columnId?: number
   @Output() emitOpenAddEditCardModal = new EventEmitter<ICard>()
 
   constructor(
@@ -64,7 +66,6 @@ export class CardComponent implements OnChanges {
     this.isAddEditCardModalOpen = true
     this.isEditMode = card ? true : false
     this.cardData = card ? { ...card } : {}
-    console.log('openAddEditCardModal: ', card)
   }
 
   onCardModalClosed() {
@@ -83,7 +84,10 @@ export class CardComponent implements OnChanges {
   async handleDeletionColumn() {
     if (!this.cardToDelete) return
     try {
-      const result = await this.cardService.deleteCard(this.cardToDelete, this.columnId!)
+      const result = await this.cardService.deleteCard(
+        this.cardToDelete,
+        this.columnId!
+      )
       if (result) {
         this.onDeleteCardModalClosed()
       }

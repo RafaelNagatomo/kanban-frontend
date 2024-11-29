@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'
 import {
   Component,
   EventEmitter,
@@ -45,7 +45,7 @@ export class AddEditColumnComponent {
   ) {
     this.columnForm = this.fb.group({
       name: ['', Validators.required],
-    });
+    })
   }
 
   ngOnInit(): void {
@@ -59,14 +59,14 @@ export class AddEditColumnComponent {
     if (changes['columnData'] && this.columnData) {
       this.columnForm.patchValue({
         name: this.isEdit ? this.columnData.name : '',
-      });
+      })
     }
   }
 
   get errors() {
     return {
       name: this.columnForm.get('name')?.errors,
-    };
+    }
   }
 
   closeModal() {
@@ -102,7 +102,7 @@ export class AddEditColumnComponent {
       id: this.columnData.id,
       name: name,
       updatedBy: 3
-    };
+    }
 
     try {
       const result = await this.columnService.updateColumn(updateColumnData)

@@ -23,7 +23,11 @@ import {
 @Component({
   selector: 'add-edit-board',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './add-edit-board.component.html',
   styleUrl: './add-edit-board.component.sass'
 })
@@ -48,7 +52,7 @@ export class AddEditBoardComponent {
       this.boardForm.patchValue({
         name: this.isEdit ? this.boardData.name : '',
         description: this.isEdit ? this.boardData.description : '',
-      });
+      })
     }
   }
 
@@ -99,7 +103,8 @@ export class AddEditBoardComponent {
       description: description,
       updatedBy: 3
     }
-    this.graphqlService.mutate(UPDATE_BOARD_MUTATION, { id: data.id, data: data }).subscribe({
+    this.graphqlService.mutate(UPDATE_BOARD_MUTATION, { id: data.id, data: data })
+    .subscribe({
       next: (result) => {
         if(result) {
           this.closeModal()

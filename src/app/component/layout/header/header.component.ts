@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common'
+import { Component } from '@angular/core'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-header',
@@ -10,12 +10,12 @@ import { Router } from '@angular/router';
   styleUrl: './header.component.sass'
 })
 export class HeaderComponent {
-  userName = 'John Doe';
-  userAvatar = 'path/to/avatar.png';
+  userName = 'John Doe'
+  userAvatar = 'path/to/avatar.png'
 
   constructor(private router: Router) {}
 
   logout() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'])
   }
 }

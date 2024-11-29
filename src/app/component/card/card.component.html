@@ -9,18 +9,21 @@
     <div class="card-header">
       <h4>{{ card.name }}</h4>
       <div class="header-actions">
+
         <button
           (click)="openAddEditCardModal(card)"
           class="btn-secondary"
         >
           <span class="material-symbols-outlined">edit</span>
         </button>
+
         <button
           (click)="openDeleteModal(card)"
           class="btn-cancel"
         >
           <span class="material-symbols-outlined">delete</span>
         </button>
+
       </div>
     </div>
     <div class="card-body">
@@ -53,7 +56,7 @@
     [isEdit]="isEditMode"
     (emitModalClosed)="onCardModalClosed()"
     [cardData]="this.cardData"
-    [columnId]="this.columnId"
+    [columnId]="this.columnId!"
   ></app-add-edit-card>
 }
   

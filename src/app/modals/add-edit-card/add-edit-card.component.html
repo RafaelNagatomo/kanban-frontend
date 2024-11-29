@@ -1,52 +1,52 @@
 <div class="backdrop">
-    <div class="modal" open>
-      <form
-        method="dialog"
-        class="modal-container"
-        (ngSubmit)="isEdit ? onUpdateForm() : onCreateForm()"
-        [formGroup]="cardForm"
-        #forDir="ngForm"
-      >
-        <h2>{{ isEdit ? 'Editar card' : 'Adicionar card' }}</h2>
-  
-        <label for="name">Nome *</label>
-        <input
-          type="text"
-          placeholder="Digite o nome do card"
-          formControlName="name"
-          required
-        />
-        @if(
-          cardForm.get('name')?.invalid
-          && errors.name?.['required']
-          && forDir.submitted
-        ){
-          <span class="validation-error">Nome é obrigatório</span>
-        }
-  
-        <label for="description">Descrição</label>
-        <textarea
-          placeholder="Digite a descrição"
-          formControlName="description"
-          rows="4"
-        ></textarea>
+  <div class="modal" open>
+    <form
+      method="dialog"
+      class="modal-container"
+      (ngSubmit)="isEdit ? onUpdateForm() : onCreateForm()"
+      [formGroup]="cardForm"
+      #forDir="ngForm"
+    >
+      <h2>{{ isEdit ? 'Editar card' : 'Adicionar card' }}</h2>
 
-        <div class="modal-actions">
-          <button
-            type="button"
-            class="btn-cancel"
-            (click)="closeModal()"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            class="btn-primary"
-          >
-            Salvar
-          </button>
-        </div>
-      </form>
-    </div>
+      <label for="name">Nome *</label>
+      <input
+        type="text"
+        placeholder="Digite o nome do card"
+        formControlName="name"
+        required
+      />
+      @if(
+        cardForm.get('name')?.invalid
+        && errors.name?.['required']
+        && forDir.submitted
+      ){
+        <span class="validation-error">Nome é obrigatório</span>
+      }
+
+      <label for="description">Descrição</label>
+      <textarea
+        placeholder="Digite a descrição"
+        formControlName="description"
+        rows="4"
+      ></textarea>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="closeModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn-primary"
+        >
+          Salvar
+        </button>
+      </div>
+    </form>
   </div>
+</div>
     

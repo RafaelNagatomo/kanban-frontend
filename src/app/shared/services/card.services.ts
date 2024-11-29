@@ -22,7 +22,6 @@ export class CardService {
   }
 
   setCardsForColumn(columnId: number, cards: ICard[]): void {
-    console.log(`Updating cards for column ${columnId}:`, cards)
     if (!this.cardsSubject.has(columnId)) {
       this.cardsSubject.set(columnId, new BehaviorSubject<ICard[]>([]))
     }
@@ -30,7 +29,6 @@ export class CardService {
   }
 
   createCard(cardData: Partial<ICard>, columnId: number): Promise<ICard | null> {
-    console.log(cardData)
     return new Promise((resolve, reject) => {
       this.graphqlService
       .mutate(CREATE_CARD_MUTATION, { data: cardData })

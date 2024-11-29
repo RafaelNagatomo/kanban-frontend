@@ -51,7 +51,8 @@ export class ColumnComponent implements OnChanges {
   }
 
   private loadAllColumnsData(): void {
-    this.graphqlService.query(GET_ALL_COLUMNS, { boardId: this.boardId }).subscribe({
+    this.graphqlService.query(GET_ALL_COLUMNS, { boardId: this.boardId })
+    .subscribe({
       next: (result) => {
         const columns = result.data.getAllColumns
         this.columnService.setColumns(columns)
@@ -75,7 +76,9 @@ export class ColumnComponent implements OnChanges {
   async handleDeletionColumn(): Promise<void> {
     if (!this.columnToDelete) return
     try {
-      const result = await this.columnService.deleteColumn(this.columnToDelete)
+      const result = await this.columnService.deleteColumn(
+        this.columnToDelete
+      )
       if (result) {
         this.onDeleteColumnModalClosed()
       }
