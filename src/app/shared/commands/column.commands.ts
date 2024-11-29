@@ -22,6 +22,15 @@ export const UPDATE_COLUMN_MUTATION = `
     }
   }
 `
+export const UPDATE_COLUMNS_POSITIONS = `
+  mutation UpdateColumnPosition($columns: [UpdateColumnInput!]!) {
+    updateColumnsPositions(columns: $columns) {
+      id
+      name
+      position
+    }
+  }
+`
 
 export const DELETE_COLUMN_MUTATION = `
   mutation DeleteColumn($id: Int!) {

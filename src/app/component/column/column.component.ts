@@ -94,10 +94,24 @@ export class ColumnComponent implements OnChanges {
     }
   }
 
-  moveColumnList(fromIndex: number, toIndex: number): void {
+  async moveColumnList(fromIndex: number, toIndex: number): Promise<void> {
     const currentColumns = this.columnsSubject.getValue()
     moveItemInArray(currentColumns, fromIndex, toIndex)
-    this.columnsSubject.next(currentColumns);
+
+    this.columnsSubject.next(currentColumns)
+    const columnsWithNewPositions = currentColumns.map((column, index) => ({
+      id: column.id,
+      position: index,
+      updatedBy: 3
+    }))
+    try {
+      await this.columnService.updateColumnPosition(
+        columnsWithNewPositions
+      )
+    } catch (error) {
+      console.error('Não foi possível concluir a operação:', error)
+      this.errorMessage = String(error)
+    }
   }
 
   moveList(dropEvent: CdkDragDrop<IColumn[]>): void {

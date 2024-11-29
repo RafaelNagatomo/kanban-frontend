@@ -5,7 +5,8 @@ import { GraphqlService } from '../graphql/graphql.service'
 import {
   CREATE_COLUMN_MUTATION,
   UPDATE_COLUMN_MUTATION,
-  DELETE_COLUMN_MUTATION
+  DELETE_COLUMN_MUTATION,
+  UPDATE_COLUMNS_POSITIONS
 } from '../commands/column.commands'
 
 @Injectable({ providedIn: 'root' })
@@ -68,6 +69,24 @@ export class ColumnService {
             reject(error)
           },
         })
+    })
+  }
+
+  updateColumnPosition(columnsWithNewPositions: Partial<IColumn[]>): Promise<IColumn | null> {
+    return new Promise((resolve, reject) => {
+      this.graphqlService.mutate(UPDATE_COLUMNS_POSITIONS, { columns: columnsWithNewPositions })
+      .subscribe({
+        next: ({ data }) => {
+          if(data) {
+            const updatedColumn = data?.updateColumn
+            resolve(updatedColumn)
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao atualizar posições das colunas:', error)
+          reject(error)
+        }
+      })
     })
   }
 
