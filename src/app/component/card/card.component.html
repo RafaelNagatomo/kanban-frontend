@@ -15,6 +15,7 @@
           <span class="material-symbols-outlined">edit</span>
         </button>
         <button
+          (click)="openDeleteModal(card)"
           class="btn-cancel"
         >
           <span class="material-symbols-outlined">delete</span>
@@ -38,10 +39,10 @@
 @if(isDeleteCardModalOpen){
   <app-confirm-modal
     [isOpen]="isDeleteCardModalOpen"
-    [title]="'Deletar coluna'"
-    [message]="'Tem certeza que deseja deletar esta coluna? Esta ação é irreversível.'"
+    [title]="'Deletar card'"
+    [message]="'Tem certeza que deseja deletar este card? Esta ação é irreversível.'"
     (emitConfirm)="handleDeletionColumn()"
-    (emitModalClosed)="onDeleteColumnModalClosed()"
+    (emitModalClosed)="onDeleteCardModalClosed()"
   ></app-confirm-modal>
 }
   

@@ -82,30 +82,36 @@ export class CardService {
   //   })
   // }
 
-  // deleteCard(deleteCardData: Partial<ICard>): Promise<boolean> {
-  //   return new Promise((resolve, reject) => {
-  //     this.graphqlService
-  //       .mutate(DELETE_CARD_MUTATION, { id: deleteCardData.id })
-  //       .subscribe({
-  //         next: ({data}) => {
-  //           const deletedCard = data?.deleteCard
+  deleteCard(deleteCardData: Partial<ICard>, columnId: number): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.graphqlService
+        .mutate(DELETE_CARD_MUTATION, { id: deleteCardData.id })
+        .subscribe({
+          next: ({data}) => {
+            const deletedCard = data?.deleteCard
             
-  //           if (deletedCard) {
-  //             const currentCards = this.cardsSubject.value
-  //             const updatedCards = currentCards.filter(card =>
-  //               card.id !== deleteCardData.id)
-  //             this.cardsSubject.next(updatedCards)
-  //             resolve(true)
-  //           } else {
-  //             console.error('Falha ao deletar a card')
-  //             return resolve(false)
-  //           }
-  //         },
-  //         error: (error) => {
-  //           console.error('Erro ao atualizar card:', error)
-  //           reject(error)
-  //         },
-  //       })
-  //   })
-  // }
+            if (deletedCard) {
+              const columnCardsSubject = this.cardsSubject.get(columnId)
+
+              if (columnCardsSubject) {
+                const currentCards = columnCardsSubject.value
+                const updatedCards = currentCards.filter(
+                  card => card.id !== deleteCardData.id
+                )
+                columnCardsSubject.next(updatedCards)
+              }
+              
+              resolve(true)
+            } else {
+              console.error('Falha ao deletar a card')
+              return resolve(false)
+            }
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar card:', error)
+            reject(error)
+          },
+        })
+    })
+  }
 }

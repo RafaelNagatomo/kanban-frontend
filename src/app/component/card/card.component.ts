@@ -4,14 +4,14 @@ import { ChangeDetectionStrategy, Component,
   OnChanges,
   Output,
   SimpleChanges
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
-import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component';
-import { ICard } from '../../shared/interfaces/card.interface';
-import { GraphqlService } from '../../shared/graphql/graphql.service';
-import { GET_ALL_CARDS } from '../../shared/queries/card.queries';
-import { CardService } from '../../shared/services/card.services';
+} from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { Observable } from 'rxjs'
+import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component'
+import { ICard } from '../../shared/interfaces/card.interface'
+import { GraphqlService } from '../../shared/graphql/graphql.service'
+import { GET_ALL_CARDS } from '../../shared/queries/card.queries'
+import { CardService } from '../../shared/services/card.services'
 
 @Component({
   selector: 'app-card',
@@ -37,12 +37,13 @@ export class CardComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['columnId'] && changes['columnId'].currentValue) {
-      this.loadAllCardsData();
+      this.loadAllCardsData()
     }
   }
 
   private loadAllCardsData(): void {
-    this.graphqlService.query(GET_ALL_CARDS, { columnId: this.columnId }).subscribe({
+    this.graphqlService.query(GET_ALL_CARDS, { columnId: this.columnId })
+    .subscribe({
       next: ({data}) => {
         const cards = data?.getAllCards
         this.cardService.setCardsForColumn(this.columnId!, cards)
@@ -51,14 +52,29 @@ export class CardComponent implements OnChanges {
     this.cards$ = this.cardService.getCardsByColumn(this.columnId!)
   }
 
+  openDeleteModal(card: ICard): void {
+    this.cardToDelete = card
+    this.isDeleteCardModalOpen = true
+  }
+
   openAddEditColumnModal(cardData?: ICard) {
     this.emitOpenAddEditCardModal.emit(cardData)
   }
 
-  handleDeletionColumn() {
+  onDeleteCardModalClosed(): void {
+    this.isDeleteCardModalOpen = false
   }
 
-  onDeleteColumnModalClosed() {
+  async handleDeletionColumn() {
+    if (!this.cardToDelete) return
+    try {
+      const result = await this.cardService.deleteCard(this.cardToDelete, this.columnId!)
+      if (result) {
+        this.onDeleteCardModalClosed()
+      }
+    } catch (error) {
+      console.error('Não foi possível concluir a operação:', error)
+      this.errorMessage = String(error)
+    }
   }
-
 }
