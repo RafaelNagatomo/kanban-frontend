@@ -96,15 +96,15 @@ main
     cursor: not-allowed
 
 .card
+  display: flex
+  flex-direction: column
+  justify-content: space-between
   border-radius: 8px
   box-shadow: $box-shadow-base
   padding: 16px
   margin: 8px
   transition: $transition-base
   cursor: pointer
-  display: flex
-  flex-direction: column
-  justify-content: space-between
 
   &:hover
     box-shadow: $box-shadow-hover-base
@@ -129,6 +129,7 @@ main
   .card-body
     font-size: 16px
     color: $gray-700
+    white-space: normal
 
   .card-footer
     position: relative
@@ -172,6 +173,8 @@ main
     font-size: 16px
     border: 1px solid black
     border-radius: 4px
+    resize: vertical
+    max-height: 500px
 
   input
     height: 40px

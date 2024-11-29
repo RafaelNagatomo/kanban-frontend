@@ -5,6 +5,7 @@ export const CREATE_BOARD_MUTATION = `
       name
       description
       userId
+      createdAt
       createdBy
     }
   }
@@ -16,6 +17,8 @@ export const UPDATE_BOARD_MUTATION = `
       id
       name
       description
+      createdAt
+      createdBy
       updatedBy
       updatedAt
     }
