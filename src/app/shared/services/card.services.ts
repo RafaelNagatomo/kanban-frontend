@@ -1,0 +1,111 @@
+import { Injectable } from '@angular/core'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { GraphqlService } from '../graphql/graphql.service'
+import { ICard } from '../interfaces/card.interface'
+import {
+  CREATE_CARD_MUTATION,
+  DELETE_CARD_MUTATION,
+  UPDATE_CARD_MUTATION
+} from '../commands/card.commands'
+
+@Injectable({ providedIn: 'root' })
+export class CardService {
+  private cardsSubject = new Map<number, BehaviorSubject<ICard[]>>([])
+  // cards$ = this.cardsSubject.asObservable()
+
+  constructor(private graphqlService: GraphqlService) {}
+
+  getCardsByColumn(columnId: number): Observable<ICard[]> {
+    if (!this.cardsSubject.has(columnId)) {
+      this.cardsSubject.set(columnId, new BehaviorSubject<ICard[]>([]))
+    }
+    return this.cardsSubject.get(columnId)!.asObservable()
+  }
+
+  setCardsForColumn(columnId: number, cards: ICard[]): void {
+    console.log(`Updating cards for column ${columnId}:`, cards)
+    if (!this.cardsSubject.has(columnId)) {
+      this.cardsSubject.set(columnId, new BehaviorSubject<ICard[]>([]))
+    }
+    this.cardsSubject.get(columnId)!.next(cards)
+  }
+
+  // createCard(cardData: Partial<ICard>): Promise<ICard | null> {
+  //   return new Promise((resolve, reject) => {
+  //     this.graphqlService
+  //     .mutate(CREATE_CARD_MUTATION, { data: cardData })
+  //     .subscribe({
+  //       next: ({ data }) => {
+  //         const createdCard = data?.createCard || null
+
+  //         if (createdCard) {
+  //           const currentCard = this.cardsSubject.value
+  //           this.cardsSubject.next([...currentCard, createdCard])
+  //           resolve(createdCard)
+  //         } else {
+  //           console.error('Falha ao criar card')
+  //           resolve(null)
+  //         }
+  //       },
+  //       error: (error: any) => {
+  //         console.error('Erro ao criar card:', error)
+  //         reject(error)
+  //       },
+  //     })
+  //   })
+  // }
+
+  // updateCard(updateCardData: Partial<ICard>): Promise<ICard | null> {
+  //   return new Promise((resolve, reject) => {
+  //     this.graphqlService
+  //       .mutate(UPDATE_CARD_MUTATION, { id: updateCardData.id, data: updateCardData })
+  //       .subscribe({
+  //         next: ({ data }) => {
+  //           const updatedCard = data?.updateCard
+  
+  //           if (updatedCard) {
+  //             const currentCard = this.cardsSubject.value
+  //             const updatedCards = currentCard.map(card =>
+  //               card.id === updatedCard.id ? updatedCard : card)
+  //             this.cardsSubject.next(updatedCards)
+  //             resolve(updatedCard)
+  //           } else {
+  //             console.error('Falha ao atualizar card')
+  //             return resolve(null)
+  //           }
+  //         },
+  //         error: (error) => {
+  //           console.error('Erro ao atualizar card:', error)
+  //           reject(error)
+  //         },
+  //       })
+  //   })
+  // }
+
+  // deleteCard(deleteCardData: Partial<ICard>): Promise<boolean> {
+  //   return new Promise((resolve, reject) => {
+  //     this.graphqlService
+  //       .mutate(DELETE_CARD_MUTATION, { id: deleteCardData.id })
+  //       .subscribe({
+  //         next: ({data}) => {
+  //           const deletedCard = data?.deleteCard
+            
+  //           if (deletedCard) {
+  //             const currentCards = this.cardsSubject.value
+  //             const updatedCards = currentCards.filter(card =>
+  //               card.id !== deleteCardData.id)
+  //             this.cardsSubject.next(updatedCards)
+  //             resolve(true)
+  //           } else {
+  //             console.error('Falha ao deletar a card')
+  //             return resolve(false)
+  //           }
+  //         },
+  //         error: (error) => {
+  //           console.error('Erro ao atualizar card:', error)
+  //           reject(error)
+  //         },
+  //       })
+  //   })
+  // }
+}

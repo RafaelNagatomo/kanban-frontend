@@ -1,46 +1,47 @@
 @if(!(cards$ | async)?.length){
-    <div class="empty-column-placeholder">
-      Arraste os cards para cá.
-    </div>
-  }
+  <div class="empty-card-placeholder">
+    Arraste os cards para cá.
+  </div>
+}
   
-  @for(card of cards$ | async; track card.id){
-    <div class="column">
-      <div class="card-header">
-        <h4>{{ card.name }}</h4>
-        <div class="header-actions">
-          <button
-            class="btn-secondary"
-          >
-            <span class="material-symbols-outlined">edit</span>
-          </button>
-          <button
-            class="btn-cancel"
-          >
-            <span class="material-symbols-outlined">delete</span>
-          </button>
-        </div>
-      </div>
-      <div class="card-body">
-        <app-card></app-card>
+@for(card of cards$ | async; track card.id){
+  <div class="card">
+    <div class="card-header">
+      <h4>{{ card.name }}</h4>
+      <div class="header-actions">
+        <button
+          class="btn-secondary"
+        >
+          <span class="material-symbols-outlined">edit</span>
+        </button>
+        <button
+          class="btn-cancel"
+        >
+          <span class="material-symbols-outlined">delete</span>
+        </button>
       </div>
     </div>
-  }
-  
-  <button
-    class="btn-primary"
-  >
-    <span class="material-symbols-outlined">add</span>
-    Criar card
-  </button>
-  
-  <!-- @if(isDeleteColumnModalOpen){
-    <app-confirm-modal
-      [isOpen]="isDeleteColumnModalOpen"
-      [title]="'Deletar coluna'"
-      [message]="'Tem certeza que deseja deletar esta coluna? Esta ação é irreversível.'"
-      (emitConfirm)="handleDeletionColumn()"
-      (emitModalClosed)="onDeleteColumnModalClosed()"
-    ></app-confirm-modal>
-  } -->
+    <div class="card-body">
+      <p>{{ card.description }}</p>
+    </div>
+  </div>
+}
+
+<button
+  (click)="openAddEditColumnModal()"
+  class="btn-primary"
+>
+  <span class="material-symbols-outlined">add</span>
+  Criar card
+</button>
+
+@if(isDeleteCardModalOpen){
+  <app-confirm-modal
+    [isOpen]="isDeleteCardModalOpen"
+    [title]="'Deletar coluna'"
+    [message]="'Tem certeza que deseja deletar esta coluna? Esta ação é irreversível.'"
+    (emitConfirm)="handleDeletionColumn()"
+    (emitModalClosed)="onDeleteColumnModalClosed()"
+  ></app-confirm-modal>
+}
   

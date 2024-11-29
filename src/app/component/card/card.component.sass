@@ -1,15 +1,14 @@
 @use '../../styles/variables' as *
 
-.column
+.card
   display: flex
   flex-direction: column
-  width: 250px
   border-radius: 8px
-  background-color: $gray-300
-  box-shadow: $box-shadow-base
+  background-color: $gray-100
   padding: 8px
-  margin: 8px
+  margin: 8px 0
   justify-content: space-between
+  box-shadow: none
   
 .card-header
   display: flex
@@ -39,7 +38,7 @@
   height: 30px
   justify-content: center
 
-.empty-column-placeholder
+.empty-card-placeholder
   padding: 8px 8px
   margin: 2px
   max-width: 100%
