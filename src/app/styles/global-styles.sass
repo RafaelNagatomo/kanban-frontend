@@ -38,13 +38,17 @@ main
   border: none
   border-radius: 8px
   padding: 8px 16px
+  transition: 0.5 easy
   cursor: pointer
 
   &:hover
     background-color: color.adjust($primary, $lightness: 15%)
+    transform: translateY(-1px)
+    box-shadow: $box-shadow-base
 
   &:active
     background-color: color.adjust($primary, $lightness: 5%)
+    transform: translateY(0)
 
   &:disabled
     background-color: $gray-400
@@ -61,12 +65,16 @@ main
   border-radius: 8px
   padding: 8px 16px
   cursor: pointer
+  transition: 0.3 easy
 
   &:hover
     background-color: color.adjust($secondary, $lightness: 15%)
+    transform: translateY(-1px)
+    box-shadow: $box-shadow-base
 
   &:active
     background-color: color.adjust($secondary, $lightness: 5%)
+    transform: translateY(0)
 
   &:disabled
     background-color: $gray-400
@@ -83,12 +91,16 @@ main
   border-radius: 8px
   padding: 8px 16px
   cursor: pointer
+  transition: 0.1 easy
 
   &:hover
     background-color: color.adjust($red, $lightness: 15%)
+    transform: translateY(-1px)
+    box-shadow: $box-shadow-base
 
   &:active
     background-color: color.adjust($red, $lightness: 5%)
+    transform: translateY(0)
   
   &:disabled
     background-color: $gray-400
@@ -103,7 +115,6 @@ main
   box-shadow: $box-shadow-base
   padding: 16px
   margin: 8px
-  transition: $transition-base
   cursor: pointer
 
   &:hover
@@ -232,11 +243,6 @@ main
   display: flex
   justify-content: flex-end
   gap: 4px
-
-.cdk-drag-preview
-  opacity: 0.9
-  transform: rotate(3deg)
-  box-shadow: $box-shadow-hover-base
 
 .cdk-drag-placeholder
   outline: 2px solid $gray-500

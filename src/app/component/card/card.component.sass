@@ -9,7 +9,7 @@
   margin: 8px 0
   justify-content: space-between
   box-shadow: none
-  transition: none
+  cursor: grab
 
   &:hover
     box-shadow: $box-shadow-base
@@ -45,3 +45,8 @@
 .blank
   height: 8px
   display: block
+
+.cdk-drag-preview
+  box-shadow: $box-shadow-hover-base
+  opacity: 0.9
+  cursor: grabbing
