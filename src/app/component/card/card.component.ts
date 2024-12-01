@@ -8,14 +8,19 @@ import {
   SimpleChanges
 } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { Observable } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component'
 import { ICard } from '../../shared/interfaces/card.interface'
 import { GraphqlService } from '../../shared/graphql/graphql.service'
 import { GET_ALL_CARDS } from '../../shared/queries/card.queries'
 import { CardService } from '../../shared/services/card.services'
 import { AddEditCardComponent } from '../../modals/add-edit-card/add-edit-card.component'
-import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop'
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+  transferArrayItem
+} from '@angular/cdk/drag-drop'
 
 @Component({
   selector: 'app-card',
@@ -31,7 +36,9 @@ import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent implements OnChanges {
-  cards$!: Observable<ICard[]>
+  private cardsSubject = new BehaviorSubject<ICard[]>([])
+  cards$: Observable<ICard[]> = this.cardsSubject.asObservable()
+
   isDeleteCardModalOpen: boolean = false
   isAddEditCardModalOpen: boolean = false
   isEditMode: boolean = false
@@ -45,7 +52,15 @@ export class CardComponent implements OnChanges {
   constructor(
     private graphqlService: GraphqlService,
     private cardService: CardService
-  ) {}
+  ) {
+    this.cardService.cards$.subscribe((cardsMap: Map<number, BehaviorSubject<ICard[]>>) => {
+      const allCards: ICard[] = [];
+      cardsMap.forEach((subject) => {
+        allCards.push(...(subject.value ?? []))
+      })
+      this.cardsSubject.next(allCards)
+    })
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['columnId'] && changes['columnId'].currentValue) {
@@ -54,10 +69,12 @@ export class CardComponent implements OnChanges {
   }
 
   private loadAllCardsData(): void {
-    this.graphqlService.query(GET_ALL_CARDS, { columnId: this.columnId })
+    if (!this.columnId) return
+
+    this.graphqlService.query(GET_ALL_CARDS, { columnId: this.columnId! })
     .subscribe({
       next: ({data}) => {
-        const cards = data?.getAllCards
+        const cards = data?.getAllCards ?? []
         this.cardService.setCardsForColumn(this.columnId!, cards)
       },
     })
@@ -101,8 +118,15 @@ export class CardComponent implements OnChanges {
 
   reorderTask(list: ICard[], fromIndex: number, toIndex: number): void {
     moveItemInArray(list, fromIndex, toIndex)
+    const reorderedCards = list.map((card, index) => ({
+      id: card.id,
+      updatedBy: 3,
+      position: index,
+    }))
+    this.cardsSubject.next(reorderedCards)
+    this.updateCardPosition(reorderedCards)
   }
-
+  
   transferTask(
     previousList: ICard[],
     currentList: ICard[],
@@ -110,28 +134,43 @@ export class CardComponent implements OnChanges {
     toIndex: number
   ): void {
     transferArrayItem(previousList, currentList, fromIndex, toIndex)
+    const currentColumnId = this.columnId
+    const updatedPreviousList = previousList.map((card, index) => ({
+      id: card.id,
+      updatedBy: 3,
+      position: index,
+    }))
+    const updatedCurrentList = currentList.map((card, index) => ({
+      id: card.id,
+      updatedBy: 3,
+      position: index,
+      columnId: currentColumnId,
+    }))
+    this.cardsSubject.next([...updatedPreviousList, ...updatedCurrentList])
+    this.updateCardPosition([...updatedPreviousList, ...updatedCurrentList])
   }
-
+  
+  
+  
   moveTask(dropEvent: CdkDragDrop<ICard[] | null>): void {
     const { previousContainer, container, previousIndex, currentIndex } = dropEvent
     const isSameContainer = previousContainer === container
-
     const previousData = previousContainer.data || []
     const currentData = container.data || []
-  
-    if (isSameContainer && previousIndex === currentIndex) {
-      return
-    }
+    if (isSameContainer && previousIndex === currentIndex) return
     if (isSameContainer) {
       this.reorderTask(currentData, previousIndex, currentIndex)
     } else {
       this.transferTask(previousData, currentData, previousIndex, currentIndex)
-      
-      const movedCard = currentData[currentIndex]
-      if (movedCard) {
-        const newColumnId = this.columnId ?? 0
-        // this.updateCardColumn(movedCard, newColumnId)
-      }
+    }
+  }
+
+  async updateCardPosition(movedCard: ICard[]) {
+    try {
+      await this.cardService.updateColumnPosition(movedCard)
+    } catch (error) {
+      console.error('Não foi possível concluir a operação:', error)
+      this.errorMessage = String(error)
     }
   }
 }

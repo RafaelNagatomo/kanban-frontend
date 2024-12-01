@@ -5,27 +5,40 @@ import { ICard } from '../interfaces/card.interface'
 import {
   CREATE_CARD_MUTATION,
   DELETE_CARD_MUTATION,
-  UPDATE_CARD_MUTATION
+  UPDATE_CARD_MUTATION,
+  UPDATE_CARDS_POSITIONS
 } from '../commands/card.commands'
 
 @Injectable({ providedIn: 'root' })
 export class CardService {
-  private cardsSubject = new Map<number, BehaviorSubject<ICard[]>>([])
+  private cardsSubject = new BehaviorSubject<Map<number, BehaviorSubject<ICard[]>>>(new Map())
+  cards$ = this.cardsSubject.asObservable()
 
   constructor(private graphqlService: GraphqlService) {}
 
   getCardsByColumn(columnId: number): Observable<ICard[]> {
-    if (!this.cardsSubject.has(columnId)) {
-      this.cardsSubject.set(columnId, new BehaviorSubject<ICard[]>([]))
+    const currentMap = this.cardsSubject.value
+    if (!currentMap.has(columnId)) {
+      const emptySubject = new BehaviorSubject<ICard[]>([])
+      const updatedMap = new Map(currentMap)
+
+      updatedMap.set(columnId, emptySubject)
+      this.cardsSubject.next(updatedMap)
+      return emptySubject.asObservable()
     }
-    return this.cardsSubject.get(columnId)!.asObservable()
+    return currentMap.get(columnId)!.asObservable()
   }
 
   setCardsForColumn(columnId: number, cards: ICard[]): void {
-    if (!this.cardsSubject.has(columnId)) {
-      this.cardsSubject.set(columnId, new BehaviorSubject<ICard[]>([]))
+    const currentMap = this.cardsSubject.value
+    const updatedMap = new Map(currentMap)
+
+    if (!updatedMap.has(columnId)) {
+      updatedMap.set(columnId, new BehaviorSubject<ICard[]>(cards))
+    } else {
+      updatedMap.get(columnId)!.next(cards)
     }
-    this.cardsSubject.get(columnId)!.next(cards)
+    this.cardsSubject.next(updatedMap)
   }
 
   createCard(cardData: Partial<ICard>, columnId: number): Promise<ICard | null> {
@@ -37,16 +50,15 @@ export class CardService {
           const createdCard = data?.createCard || null
 
           if (createdCard) {
-            let columnCardsSubject = this.cardsSubject.get(columnId)
+            const currentCardsMap = this.cardsSubject.getValue()
+            const columnCardsSubject = currentCardsMap.get(columnId)
 
-            if (!columnCardsSubject) {
-              columnCardsSubject = new BehaviorSubject<ICard[]>([])
-              this.cardsSubject.set(columnId, columnCardsSubject)
-            }
+            if (columnCardsSubject) {
               const currentCards = columnCardsSubject.value
               columnCardsSubject.next([...currentCards, createdCard])
+            }
 
-              resolve(createdCard)
+            resolve(createdCard)
           } else {
             console.error('Falha ao criar card')
             resolve(null)
@@ -69,18 +81,16 @@ export class CardService {
             const updatedCard = data?.updateCard || null
   
             if (updatedCard) {
-              let columnCardsSubject = this.cardsSubject.get(columnId)
+              const currentCardsMap = this.cardsSubject.getValue()
+              const columnCardsSubject = currentCardsMap.get(columnId)
 
-              if (!columnCardsSubject) {
-                columnCardsSubject = new BehaviorSubject<ICard[]>([])
-                this.cardsSubject.set(columnId, columnCardsSubject)
+              if (columnCardsSubject) {
+                const currentCard = columnCardsSubject.value
+                const updatedCards = currentCard.map(card =>
+                  card.id === updatedCard.id ? updatedCard : card
+                )
+                columnCardsSubject.next(updatedCards)
               }
-
-              const currentCard = columnCardsSubject.value
-              const updatedCards = currentCard.map(card =>
-                card.id === updatedCard.id ? updatedCard : card
-              )
-              columnCardsSubject.next(updatedCards)
               
               resolve(updatedCard)
             } else {
@@ -96,23 +106,41 @@ export class CardService {
     })
   }
 
+  updateColumnPosition(cardsWithNewPositions: Partial<ICard[]>): Promise<ICard | null> {
+    return new Promise((resolve, reject) => {
+      this.graphqlService.mutate(UPDATE_CARDS_POSITIONS, { cards: cardsWithNewPositions })
+      .subscribe({
+        next: ({ data }) => {
+          if(data) {
+            const updatedCard = data?.updateCard
+            resolve(updatedCard)
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao atualizar posições dos cards:', error)
+          reject(error)
+        }
+      })
+    })
+  }
+
   deleteCard(deleteCardData: Partial<ICard>, columnId: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.graphqlService
         .mutate(DELETE_CARD_MUTATION, { id: deleteCardData.id })
         .subscribe({
           next: ({data}) => {
-            const deletedCard = data?.deleteCard
+            const deletedCard = data?.deleteCard || null
             
             if (deletedCard) {
-              const columnCardsSubject = this.cardsSubject.get(columnId)
-
+              const currentCardsMap = this.cardsSubject.getValue()
+              const columnCardsSubject = currentCardsMap.get(columnId)
+            
               if (columnCardsSubject) {
-                const currentCards = columnCardsSubject.value
-                const updatedCards = currentCards.filter(card =>
-                  card.id !== deleteCardData.id
+                const updatedCards = columnCardsSubject.getValue().filter(
+                  (card) => card.id !== deleteCardData.id
                 )
-                columnCardsSubject.next(updatedCards)
+                columnCardsSubject.next(updatedCards);
               }
 
               resolve(true)
