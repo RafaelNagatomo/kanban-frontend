@@ -1,13 +1,20 @@
 @use './variables' as *
 @use 'sass:color'
 
-body
+@import 'ngx-toastr/toastr'
+
+*
+  margin: 0
+  padding: 0
+
+html, body
   background-color: $bg-primary
   font-family: $font-family-sans-serif
   color: $text-color
+  height: 100%
 
 main
-  min-height: 85vh
+  height: 100%
 
 .container
   display: grid
@@ -251,3 +258,5 @@ main
 .cdk-drop-list-dragging
   outline-offset: 2px
   border-radius: 8px
+  cursor: grabbing
+  
