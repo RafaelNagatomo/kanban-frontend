@@ -1,8 +1,6 @@
 <app-login-form
-  primaryBtnText="Login Now"
-  secondaryBtnText="Signup Now"
+  [isLogin]="true"
   (submit)="submit()"
-  (navigate)="navigate()"
 >
   <form [formGroup]="loginForm">
     <label for="name">E-mail*</label>

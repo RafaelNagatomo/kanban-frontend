@@ -1,29 +1,41 @@
 <main>
-  <section class="form-section">
-      <h2>Faça seu login</h2>
-      <ng-content></ng-content>
-      <div class="btn-wrapper">
-        <button
-          class="btn-secondary"
-          (click)="submit()"
-        >
-          Login
-        </button>
-        <div class="divider">
-          <div></div>
-          <span>or</span>
-          <div></div>
-        </div>
-        <button
-          class="btn-secondary"
-          (click)="navigate()"
-        >
-          Sign up
-        </button>
+  <section
+    class="form-section"
+    [class.animateIn]="isLogin"
+    [class.animateOut]="!isLogin"
+  >
+    <h2>{{ this.isLogin ? 'Faça seu login' : 'Entre na sua conta'}}</h2>
+    <ng-content></ng-content>
+    <div class="btn-wrapper">
+      <button
+        class="btn-secondary"
+        (click)="submit()"
+      >
+      {{ this.isLogin ? 'Login' : 'Sign up'}}
+      </button>
+      <div class="divider">
+        <div></div>
+        <span>or</span>
+        <div></div>
       </div>
+      <button
+        class="btn-secondary"
+        (click)="navigate()"
+      >
+        {{ this.isLogin ? 'Sign up' : 'Login'}}
+      </button>
+    </div>
   </section>
-  <section class="main-section">
+  <section
+    class="main-section"
+    [class.animateIn]="isLogin"
+    [class.animateOut]="!isLogin"
+  >
     <h1>Gerencie suas tarefas!</h1>
-    <img src="/assets/svg/login-main-img.svg"/>
+    @if(this.isLogin) {
+      <img width="40%" src="/assets/svg/login-main-img.svg"/>
+    } @else {
+      <img width="40%" src="/assets/svg/signup-main-img.svg"/>
+    }
   </section>
 </main>

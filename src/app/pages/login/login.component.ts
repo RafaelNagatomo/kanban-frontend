@@ -33,8 +33,4 @@ export class LoginComponent {
       error: () => this.toastService.error("Erro inesperado! Tente novamente mais tarde")
     })
   }
-
-  navigate(){
-    this.router.navigate(["signup"])
-  }
 }

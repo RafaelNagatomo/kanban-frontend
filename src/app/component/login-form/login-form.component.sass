@@ -13,6 +13,13 @@ main
     flex-direction: column
     align-items: center
     justify-content: center
+    transition: opacity 0.5s ease, transform 0.5s ease
+
+    &.animateIn
+      animation: fade-in 0.7s ease forwards, slide-in 0.7s ease forwards
+
+    &.animateOut
+      animation: fade-in 0.7s ease forwards, slide-out 0.7s ease forwards
 
   .main-section
     background-color: $bg-secondary
@@ -59,5 +66,22 @@ main
     justify-content: center
 
   img
-    width: 40%
     margin: 30px
+
+@keyframes fade-in
+  from
+    opacity: 0
+  to
+    opacity: 1
+
+@keyframes slide-in
+  from
+    transform: translateY(-30px)
+  to
+    transform: translateY(0)
+
+@keyframes slide-out
+  from
+    transform: translateY(30px)
+  to
+    transform: translateY(0)

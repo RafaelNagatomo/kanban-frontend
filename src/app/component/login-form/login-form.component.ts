@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-login-form',
@@ -8,19 +9,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
   styleUrl: './login-form.component.sass'
 })
 export class LoginFormComponent {
-  @Input() title: string = "";
-  @Input() primaryBtnText: string = "";
-  @Input() secondaryBtnText: string = "";
-  @Input() disablePrimaryBtn: boolean = true;
-  @Output("submit") onSubmit = new EventEmitter();
+  @Input() isLogin: boolean = false
+  @Output("submit") onSubmit = new EventEmitter()
 
-  @Output("navigate") onNavigate = new EventEmitter();
-  
+  constructor(private router: Router) {}
+
   submit(){
-    this.onSubmit.emit();
+    this.onSubmit.emit()
   }
-
+  
   navigate(){
-    this.onNavigate.emit();
+    this.isLogin = !this.isLogin
+    const targetRoute = this.isLogin ? '/login' : '/signup'
+    this.router.navigate([targetRoute])
   }
 }
