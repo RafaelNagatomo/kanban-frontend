@@ -6,8 +6,3 @@ export interface SignupForm {
   password: FormControl,
   confirmPassword: FormControl
 }
-
-export type LoginResponse = {
-    token: string,
-    name: string
-}
