@@ -1,0 +1,34 @@
+<app-login-form
+  (submit)="submit()"
+>
+  <form [formGroup]="signupForm">
+    <label for="name">Nome*</label>
+    <input
+      type="text"
+      placeholder="Digite seu nome"
+      formControlName="name"
+      required
+    />
+    <label for="email">E-mail*</label>
+    <input
+      type="text"
+      placeholder="Digite seu e-mail"
+      formControlName="email"
+      required
+    />
+    <label for="password">Senha*</label>
+    <input
+      type="password"
+      placeholder="Digite sua senha"
+      formControlName="password"
+      required
+    />
+    <label for="confirmPassword">Confirmação da senha*</label>
+    <input
+      type="password"
+      placeholder="Digite novamente sua senha"
+      formControlName="confirmPassword"
+      required
+    />
+  </form>
+</app-login-form>
