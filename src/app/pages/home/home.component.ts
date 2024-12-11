@@ -9,11 +9,15 @@ import { BehaviorSubject } from 'rxjs'
 import { ConfirmModalComponent } from "../../modals/confirm-modal/confirm-modal.component"
 import { DELETE_BOARD_MUTATION } from '../../shared/commands/board.commands'
 import { Router } from '@angular/router'
+import { HeaderComponent } from '../../component/layout/header/header.component'
+import { FooterComponent } from '../../component/layout/footer/footer.component'
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
+    HeaderComponent,
+    FooterComponent,
     BoardCardComponent,
     CommonModule,
     AddEditBoardComponent,
