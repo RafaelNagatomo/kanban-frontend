@@ -9,6 +9,7 @@ import { ColumnComponent } from '../column/column.component'
 import { AddEditColumnComponent } from '../../modals/add-edit-column/add-edit-column.component'
 import { IColumn } from '../../shared/interfaces/column.interface'
 import { DragDropModule } from '@angular/cdk/drag-drop'
+import { HeaderComponent } from '../layout/header/header.component'
 
 @Component({
   selector: 'app-board-details',
@@ -17,7 +18,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop'
     CommonModule,
     ColumnComponent,
     AddEditColumnComponent,
-    DragDropModule
+    DragDropModule,
+    HeaderComponent
   ],
   templateUrl: './board-details.component.html',
   styleUrl: './board-details.component.sass'

@@ -18,4 +18,8 @@ export class HeaderComponent {
   logout() {
     this.router.navigate(['/login'])
   }
+
+  handleHome(){
+    this.router.navigate(['/home'])
+  }
 }
